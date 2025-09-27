@@ -1,0 +1,5 @@
+"type" :"module" in package.json
+main file is "server.js" in package.json
+using morgan for getting logs of every hit at any route
+for validation using express-validators
+using redis , it saves data in RAM rather than in ROM as in mongodb

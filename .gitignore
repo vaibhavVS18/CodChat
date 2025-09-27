@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables (do NOT push .env)
+*.env
+
+# Build output (frontend)
+frontend/dist/
+frontend/build/
+frontend/.next/
+
+# Build output (backend)
+backend/build/
+backend/dist/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

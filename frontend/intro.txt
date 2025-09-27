@@ -1,0 +1,15 @@
+using tailwindcss in index.css
+deleted app.css
+setup react-router-dom
+
+/*
+                    using axios
+Axios is a JavaScript library used to make HTTP requests (like GET, POST, PUT, DELETE) from your frontend (React, Next.js, etc.) to your backend (Node.js, Express, or APIs).
+
+why people use Axios instead of just fetch:
+explore it yourself
+*/
+
+using createContext, useContext and .provider (to give access of particular props to every components)
+
+
