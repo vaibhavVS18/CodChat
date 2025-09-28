@@ -60,7 +60,7 @@ const ConversationArea = ({
     };
 
   return (
-    <div className="flex flex-col h-[85vh] sm:h-[97vh] overflow-hidden mt-20 sm:mt-0 p-2 sm:p-4 border border-gray-400 rounded-xl sm:rounded-2xl bg-gray-800 z-10">
+    <div className="flex flex-col h-[82vh] sm:h-[97vh] overflow-hidden mt-20 sm:mt-0 p-2 sm:p-4 border border-gray-400 rounded-xl sm:rounded-2xl bg-gray-800 z-10">
       {/* Header */}
       <header className="flex justify-between items-center p-2 px-4 w-full backdrop-blur-md border border-gray-400 rounded-xl shadow-sm flex-shrink-0 mb-2">
         <div className="flex items-center gap-3">
