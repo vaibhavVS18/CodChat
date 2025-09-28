@@ -41,49 +41,50 @@ const ProjectsSection = ({
 
         {/* Existing Projects */}
         {projects.map((project) => (
-          <div
-            key={project._id}
-            className="p-6 bg-gray-800/40 backdrop-blur border border-gray-400 
-                      hover:border-emerald-500/40 hover:shadow-lg hover:scale-105 hover:shadow-emerald-500/20
-                      rounded-2xl cursor-pointer transition-all group"
-            onClick={() => navigate(`/project`, { state: { project } })}
-          >
-            {/* Profile Circle + Project Name */}
-            <div className="flex items-center mb-4 space-x-4">
-              <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                {project.name.charAt(0).toUpperCase()}
-              </div>
-              <h4 className="font-semibold text-lg text-gray-300 group-hover:text-emerald-400 transition-colors">
-                {project.name}
-              </h4>
-            </div>
+<div
+  key={project._id}
+  className="p-6 bg-gray-800/40 backdrop-blur border border-emerald-500/40 shadow-lg scale-105 shadow-emerald-500/20
+             md:border-gray-400 md:hover:border-emerald-500/40 md:hover:shadow-lg md:hover:scale-105 md:hover:shadow-emerald-500/20
+             rounded-2xl cursor-pointer transition-all group"
+  onClick={() => navigate(`/project`, { state: { project } })}
+>
+  {/* Profile Circle + Project Name */}
+  <div className="flex items-center mb-4 space-x-4">
+    <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-lg">
+      {project.name.charAt(0).toUpperCase()}
+    </div>
+    <h4 className="font-semibold text-lg text-emerald-400 md:text-gray-300 md:group-hover:text-emerald-400 transition-colors">
+      {project.name}
+    </h4>
+  </div>
 
-            {/* Collaborators & Date */}
-            <div className="flex items-center justify-between text-sm text-gray-400">
-              <div className="flex items-center space-x-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                  />
-                </svg>
-                <span>
-                  {project.users.length} collaborator
-                  {project.users.length !== 1 ? "s" : ""}
-                </span>
-              </div>
-              <div className="text-xs">
-                {new Date(project.createdAt).toLocaleDateString()}
-              </div>
-            </div>
-          </div>
+  {/* Collaborators & Date */}
+  <div className="flex items-center justify-between text-sm text-gray-400">
+    <div className="flex items-center space-x-2">
+      <svg
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+        />
+      </svg>
+      <span>
+        {project.users.length} collaborator
+        {project.users.length !== 1 ? "s" : ""}
+      </span>
+    </div>
+    <div className="text-xs">
+      {new Date(project.createdAt).toLocaleDateString()}
+    </div>
+  </div>
+</div>
+
         ))}
       </div>
     </div>
