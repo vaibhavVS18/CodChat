@@ -78,79 +78,79 @@ const Home = () => {
 
 
       {/* Feature section */}
-<section className="mb-16 px-4 sm:px-6 lg:px-12">
-  <h2 className="text-3xl sm:text-4xl text-gray-300 font-bold text-center mb-10">
-    Features
-  </h2>
+      <section className="mb-16 px-4 sm:px-6 lg:px-12">
+        <h2 className="text-3xl sm:text-4xl text-gray-300 font-bold text-center mb-10">
+          Features
+        </h2>
 
-  <div className="grid md:grid-cols-3 gap-8">
-    {/* 1. Team Collaboration */}
-    <div
-      tabIndex={0}
-      className="rounded-2xl overflow-hidden cursor-pointer 
-                 transition-transform 
-                 hover:shadow-xl focus:shadow-xl active:shadow-xl
-                 bg-gray-900 border border-gray-700 
-                 hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
-    >
-      <img
-        src="/feature1.png"
-        alt="Team Collaboration"
-        className="w-full h-64 sm:h-70 object-cover"
-      />
-      <div className="p-4 sm:p-6">
-        <h3 className="text-xl font-semibold text-white mb-2">Team Collaboration</h3>
-        <p className="text-gray-300 text-sm sm:text-base">
-          Invite collaborators and work together in real-time on your projects.
-        </p>
-      </div>
-    </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* 1. Team Collaboration */}
+          <div
+            tabIndex={0}
+            className="rounded-2xl overflow-hidden cursor-pointer 
+                      transition-transform 
+                      hover:shadow-xl focus:shadow-xl active:shadow-xl
+                      bg-gray-900 border border-gray-700 
+                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+          >
+            <img
+              src="/feature1.png"
+              alt="Team Collaboration"
+              className="w-full h-64 sm:h-70 object-cover"
+            />
+            <div className="p-4 sm:p-6">
+              <h3 className="text-xl font-semibold text-white mb-2">Team Collaboration</h3>
+              <p className="text-gray-300 text-sm sm:text-base">
+                Invite collaborators and work together in real-time on your projects.
+              </p>
+            </div>
+          </div>
 
-    {/* 2. Integrated Chat */}
-    <div
-      tabIndex={0}
-      className="rounded-2xl overflow-hidden cursor-pointer 
-                 transition-transform 
-                 hover:shadow-xl focus:shadow-xl active:shadow-xl
-                 bg-gray-900 border border-gray-700 
-                 hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
-    >
-      <img
-        src="/feature2.png"
-        alt="Integrated Chat"
-        className="w-full h-64 sm:h-70 object-cover"
-      />
-      <div className="p-4 sm:p-6">
-        <h3 className="text-xl font-semibold text-white mb-2">Integrated Chat</h3>
-        <p className="text-gray-300 text-sm sm:text-base">
-          Chat with your team members directly within the platform while coding.
-        </p>
-      </div>
-    </div>
+          {/* 2. Integrated Chat */}
+          <div
+            tabIndex={0}
+            className="rounded-2xl overflow-hidden cursor-pointer 
+                      transition-transform 
+                      hover:shadow-xl focus:shadow-xl active:shadow-xl
+                      bg-gray-900 border border-gray-700 
+                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+          >
+            <img
+              src="/feature2.png"
+              alt="Integrated Chat"
+              className="w-full h-64 sm:h-70 object-cover"
+            />
+            <div className="p-4 sm:p-6">
+              <h3 className="text-xl font-semibold text-white mb-2">Integrated Chat</h3>
+              <p className="text-gray-300 text-sm sm:text-base">
+                Chat with your team members directly within the platform while coding.
+              </p>
+            </div>
+          </div>
 
-    {/* 3. AI Assistant */}
-    <div
-      tabIndex={0}
-      className="rounded-2xl overflow-hidden cursor-pointer 
-                 transition-transform 
-                 hover:shadow-xl focus:shadow-xl active:shadow-xl
-                 bg-gray-900 border border-gray-700 
-                 hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
-    >
-      <img
-        src="/feature3.png"
-        alt="AI Assistant"
-        className="w-full h-64 sm:h-70 object-cover"
-      />
-      <div className="p-4 sm:p-6">
-        <h3 className="text-xl font-semibold text-white mb-2">AI Assistant</h3>
-        <p className="text-gray-300 text-sm sm:text-base">
-          Get instant help from AI that participates in your team chat and assists with coding.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+          {/* 3. AI Assistant */}
+          <div
+            tabIndex={0}
+            className="rounded-2xl overflow-hidden cursor-pointer 
+                      transition-transform 
+                      hover:shadow-xl focus:shadow-xl active:shadow-xl
+                      bg-gray-900 border border-gray-700 
+                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+          >
+            <img
+              src="/feature3.png"
+              alt="AI Assistant"
+              className="w-full h-64 sm:h-70 object-cover"
+            />
+            <div className="p-4 sm:p-6">
+              <h3 className="text-xl font-semibold text-white mb-2">AI Assistant</h3>
+              <p className="text-gray-300 text-sm sm:text-base">
+                Get instant help from AI that participates in your team chat and assists with coding.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
 
 

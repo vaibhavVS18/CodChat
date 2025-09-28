@@ -232,6 +232,37 @@ const renderMessage = (message, index) => {
 
       </section>
 
+    {
+      !isAiPanelOpen && (
+<div className="inset-y-0 mt-20 right flex-1 bg-gray-900 shadow-lg z-40 flex flex-col border-2 border-gray-400 rounded-2xl overflow-hidden relative">
+  {/* Image fills div completely */}
+  <img
+    src="/back.png"
+    alt="AI Preview"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* Text overlay at top-right */}
+  <div className="absolute top-8 right-12">
+    <div className="px-6 py-4 rounded-xl">
+      <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+        AI Response like <span className="text-white"> Code </span> 
+        and <span className="text-white">Files </span> 
+        will be shown here.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+      )
+    }
+
       {/* AI Response Panel - Takes remaining space on desktop, full width on mobile */}
       <AIResponsePanel
         message={selectedAiMessage}
