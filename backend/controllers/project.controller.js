@@ -59,10 +59,10 @@ export const addUsersToProject = async(req, res)=>{
             email: req.user.email
         })
 
-        const project = projectService.addUsersToProject({projectId, users, currUserId: loggedInUser._id});
+        const updatedProject = await projectService.addUsersToProject({projectId, users, currUserId: loggedInUser._id});
 
         return res.status(200).json({
-            project,
+            updatedProject,
         })
      }
     catch(err){

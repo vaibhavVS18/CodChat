@@ -89,15 +89,18 @@ const Project = () => {
       });
 
 
-    // 5. Fetch all users
+    // 5. Fetch all users, those are not in this project yet
     axios
-      .get("/users/all")
+      .get("/users/all", {
+        params: { projectId: project._id }, // send projectId
+      })
       .then((res) => {
-        setUsersList(res.data.users);
+        setUsersList(res.data.users); 
       })
       .catch((err) => {
         console.log(err);
       });
+
   }, [location.state.project._id, project._id]);
 
 const renderMessage = (message, index) => {
@@ -190,9 +193,6 @@ const renderMessage = (message, index) => {
 };
 
 
-
-
-
   return (
     <main className="flex-1 flex relative overflow-hidden">
       {/* Chat Section - Fixed width on desktop, full width on mobile when AI panel closed */}
@@ -228,38 +228,42 @@ const renderMessage = (message, index) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           usersList={usersList}
+          projectId={project._id}
+
+          // imp.- to update users in ColllaboratorPanel also , 
+          onCollaboratorsUpdated={(newUsers)=>{
+            setProject((prev)=>({
+              ...prev,
+              users: newUsers
+            }))
+          }}
         />
 
       </section>
 
+
+          {/* replacer of ai Response Panel */}
     {
       !isAiPanelOpen && (
-<div className="inset-y-0 mt-20 right flex-1 bg-gray-900 shadow-lg z-40 flex flex-col border-2 border-gray-400 rounded-2xl overflow-hidden relative">
-  {/* Image fills div completely */}
-  <img
-    src="/back.png"
-    alt="AI Preview"
-    className="absolute inset-0 w-full h-full object-cover"
-  />
-
-  {/* Text overlay at top-right */}
-  <div className="absolute top-8 right-12">
-    <div className="px-6 py-4 rounded-xl">
-      <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
-        AI Response like <span className="text-white"> Code </span> 
-        and <span className="text-white">Files </span> 
-        will be shown here.
-      </p>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
+        <div className="inset-y-0 mt-20 right flex-1 bg-gray-900 shadow-lg z-40 flex flex-col border-2 border-gray-400 rounded-2xl overflow-hidden relative">
+          {/* Image fills div completely */}
+          <img
+            src="/back.png"
+            alt="AI Preview"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/10"></div>     
+          {/* Text overlay at top-right */}
+          <div className="absolute top-8 right-12">
+            <div className="px-6 py-4 rounded-xl">
+              <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+                AI Response like <span className="text-white"> Code </span> 
+                and <span className="text-white">Files </span> 
+                will be shown here.
+              </p>
+            </div>
+          </div>
+        </div>
       )
     }
 

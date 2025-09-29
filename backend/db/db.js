@@ -12,3 +12,5 @@ function connect(){
 }
 
 export default connect;
+
+// or you can use async-await with try catch

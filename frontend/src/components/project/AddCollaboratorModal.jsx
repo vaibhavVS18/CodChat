@@ -2,19 +2,23 @@
 import React, { useState } from "react";
 import axios from "../../config/axios";
 
-const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId }) => {
+const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId, onCollaboratorsUpdated }) => {
   if (!isOpen) return null;
 
   const [selectedUserIds, setSelectedUserIds] = useState([]);
 
+  
   const addCollaborators = () => {
     axios
       .put("/projects/add-user", {
         projectId,
         users: selectedUserIds,
       })
-      .then(() => {
-        onClose(); // close modal after adding
+      .then((res) => {
+        if(res.data?.updatedProject){
+          onCollaboratorsUpdated(res.data.updatedProject.users)
+          onClose(); // close modal after adding
+        }
       })
       .catch((err) => {
         console.log(err);

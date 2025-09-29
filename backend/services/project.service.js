@@ -75,7 +75,7 @@ export const addUsersToProject = async({projectId, users, currUserId})=>{
         }
     },{
         new: true
-    })
+    }).populate("users");
 
     return updatedProject;
 }

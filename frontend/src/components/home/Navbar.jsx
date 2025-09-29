@@ -1,6 +1,6 @@
 import { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../config/axios";
 import { UserContext } from "../../context/user.context"; // adjust path
 
 export default function Navbar({ onSignupClick }) {
