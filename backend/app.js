@@ -10,7 +10,7 @@ import cookieParser from "cookie-parser"
 import cors from "cors";
 
 import passport from "./config/passport.js";
-import session from "express-session";
+// import session from "express-session";
 
 connect();
 
