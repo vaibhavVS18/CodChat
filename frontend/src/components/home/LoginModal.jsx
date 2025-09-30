@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../config/axios";
 import { UserContext } from "../../context/user.context";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
@@ -31,6 +32,14 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
       });
   }
 
+    // Google OAuth
+  const handleGoogleLogin = () => {
+    // redirect user to backend Google login route
+      const backendUrl = import.meta.env.VITE_API_URL;
+      const redirectPage = window.location.pathname;  // currentpage
+     window.location.href = `${backendUrl}/auth/google?state=${encodeURIComponent(redirectPage)}`;
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -41,7 +50,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
     >
       {/* Modal box */}
       <div
-        className="bg-gray-900/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-800 relative my-8"
+        className="bg-gray-900/80 backdrop-blur-md p-4 sm:p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-800 relative my-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -52,7 +61,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
           ✕
         </button>
 
-        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-5 text-center bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
           Login
         </h2>
 
@@ -103,7 +112,26 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
 
         </form>
 
-        <p className="text-gray-400 mt-6 text-center text-xs sm:text-sm">
+        {/* Divider */}
+          <div className="flex items-center my-3">
+            <hr className="flex-1 border-gray-700" />
+            <span className="px-3 text-gray-400">or</span>
+            <hr className="flex-1 border-gray-700" />
+          </div> 
+
+        {/* Google Sign Up Button */}
+        <div className="flex justify-center">
+        <button
+          onClick={handleGoogleLogin}
+          className=" py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
+        >
+          <FcGoogle className="text-xl" />
+          Sign in with Google
+        </button>
+        </div>
+        
+
+        <p className="text-gray-400 mt-4 text-center text-xs sm:text-sm">
           Don&apos;t have an account?{" "}
           <button
             type="button"

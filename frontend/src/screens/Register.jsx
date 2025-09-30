@@ -17,7 +17,7 @@ const Register = () => {
       .post("/users/register", { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-        setUser(res.data.user);
+        setUser(res.data.user);    // imp. to update navbar
         navigate("/");
       })
       .catch((err) => {

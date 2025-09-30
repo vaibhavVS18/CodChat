@@ -37,7 +37,7 @@ io.use(async (socket, next)=>{
             return next(new Error("Authentication error"));
         }
 
-        socket.user = decoded;
+        socket.user = decoded.user;
         return next()
     }
     catch(err){

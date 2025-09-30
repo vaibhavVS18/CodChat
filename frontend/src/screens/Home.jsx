@@ -11,10 +11,29 @@ const Home = () => {
   const [projects, setProjects] = useState([]);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const { user , setUser} = useContext(UserContext);
   const { setIsLoginOpen } = useContext(ModalContext);
 
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    const params = new URLSearchParams(window.location.search);   // it gives query string part of the url
+    const token = params.get("token");
+    const redirectPage= params.get("redirectPage");
+    console.log(redirectPage);
+
+    if (token) {
+      // Save token in localStorage
+      localStorage.setItem("token", token);
+
+      // Clean URL
+      // window.history.replaceState({}, document.title, redirectPage);
+
+      // Navigate to original page
+      navigate(redirectPage, { replace: true });
+    }
+  }, [setUser, navigate]);
+
 
   const fetchProjects = () => {
     axios

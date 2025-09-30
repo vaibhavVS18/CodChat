@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         select: false,
-    }
+    },
+
+    googleId: { type: String, unique: true, sparse: true }, // allow null for non-Google users
+    username: { type: String },
 })
 
 userSchema.statics.hashPassword = async function(password){
@@ -27,13 +30,18 @@ userSchema.methods.isValidPassword = async function (password){
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.methods.generateJWT = function(){
-    return jwt.sign(
-        {email: this.email},
-         process.env.JWT_SECRET,
-        {expiresIn: "24h"}
-        );
-}
+userSchema.methods.generateJWT = function () {
+  // Convert Mongoose document to plain object
+  const userObject = this.toObject();
+  delete userObject.password; // remove password
+
+  return jwt.sign(
+    { user: userObject },       // include full user object
+    process.env.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+};
+
 
 const User = mongoose.model("User", userSchema);
 

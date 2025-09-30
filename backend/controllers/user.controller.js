@@ -56,7 +56,7 @@ export const loginController = async (req, res)=>{
 }
 
 export const profileController = async(req, res)=>{
-    console.log(req.user);
+    // console.log(req.user);
     const email = req.user.email;
     const user = await userModel.findOne({email});   // .select bcoz in schema we have used passsword select false
 

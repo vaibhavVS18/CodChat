@@ -1,0 +1,51 @@
+import passport from "passport";
+import {Strategy as GoogleStrategy} from "passport-google-oauth20";
+
+import UserModel from "../models/user.model.js";
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.GOOGLE_CALLBACK_URL
+        },
+        async(accessToken, refreshToken, profile, cb)=>{
+            try{
+                let user = await UserModel.findOne({googleId: profile.id});
+                if(!user){
+                    user = await UserModel.create({
+                        googleId: profile.id,
+                        username: profile.displayName,
+                        email: profile.emails?.[0]?.value || `google_${profile.id}@noemail.com`,
+                        // profileImage: profile.photos?.[0]?.value,
+                    });
+                }
+
+                return cb(null, user);
+            }
+            catch(err){
+                return cb(err, null);
+            }
+        }
+    )
+);
+
+// -> Serialize and Deserialize user
+
+//          // -> we are using jwt token, instead of 
+// passport.serializeUser((user, cb)=>{
+//     cb(null, user.id);
+// });
+
+// passport.deserializeUser(async (id, cb)=>{
+//     try{
+//         const user = await UserModel.findById(id);
+//         cb(null, user);
+//     }
+//     catch(err){
+//         cb(err, null);
+//     }
+// });
+
+export default passport;
