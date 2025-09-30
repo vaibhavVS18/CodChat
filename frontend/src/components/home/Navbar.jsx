@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "../../config/axios";
 import { UserContext } from "../../context/user.context"; // adjust path
 
-export default function Navbar({ onSignupClick }) {
+export default function Navbar({ onLoginClick }) {
   const { user, setUser } = useContext(UserContext); // use context directly
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -113,10 +113,10 @@ export default function Navbar({ onSignupClick }) {
                 </>
               ) : (
                 <button
-                  onClick={onSignupClick}
+                  onClick={onLoginClick}
                   className="px-6 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all"
                 >
-                  Signup
+                  Login
                 </button>
               )}
             </div>

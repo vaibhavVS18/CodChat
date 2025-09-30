@@ -6,12 +6,14 @@ import { UserContext } from "../../context/user.context";
 const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading]  =useState(false);
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   function submitHandler(e) {
     e.preventDefault();
+    setLoading(true);
 
     axios
       .post("/users/login", { email, password })
@@ -23,6 +25,9 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
       })
       .catch((err) => {
         console.log(err.response?.data || err.message);
+      })
+      .finally(()=>{
+        setLoading(false);
       });
   }
 
@@ -86,10 +91,16 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all text-sm sm:text-base"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl font-medium shadow-md transition-all text-sm sm:text-base 
+              ${loading 
+                ? "bg-gray-700 text-gray-300 cursor-not-allowed" 
+                : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white"
+              }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
+
         </form>
 
         <p className="text-gray-400 mt-6 text-center text-xs sm:text-sm">
