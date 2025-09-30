@@ -38,16 +38,27 @@ export default function Navbar({ onLoginClick }) {
           <div className="flex items-center justify-between">
             {/* Logo + Title */}
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-emerald-500/90 rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-sm">C</span>
-              </div>
               <Link
                 to="/"
-                className="text-xl font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent hover:from-emerald-300 hover:to-cyan-300 transition-all"
+                className="flex items-center space-x-3 group"
               >
-                CodChat
+                {/* Logo Image in Circle */}
+                <div className="w-11 h-11 rounded-full overflow-hidden shadow-md">
+                  <img
+                    src="/logo.png" // put your logo path here
+                    alt="CodChat Logo"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  />
+                </div>
+
+                {/* Title */}
+                <span className="text-xl font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent group-hover:from-emerald-300 group-hover:to-cyan-300 transition-all">
+                  CodChat
+                </span>
               </Link>
             </div>
+
+
 
             {/* Right side */}
             <div className="flex items-center space-x-4 relative" ref={menuRef}>
