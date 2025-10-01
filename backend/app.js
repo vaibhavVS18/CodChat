@@ -6,6 +6,12 @@ import projectRoutes from "./routes/project.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+import { websiteActiva } from "activa";
+const intervalId = websiteActiva(`${process.env.BACKEND_URL}`, 13);
+
 import cookieParser from "cookie-parser"
 import cors from "cors";
 
