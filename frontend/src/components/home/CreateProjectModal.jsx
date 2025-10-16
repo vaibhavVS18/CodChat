@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import axios from "../../config/axios"; // adjust path
+import axios from "../../config/axios";
 import { useNavigate } from "react-router-dom";
 
 const CreateProjectModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [projectName, setProjectName] = useState("");
+  const [error, setError] = useState(""); 
 
-const handleCreate = (e) => {
-  e.preventDefault();
-  if (!projectName.trim()) return;
+  const handleCreate = (e) => {
+    e.preventDefault();
+    if (!projectName.trim()) return;
 
-  axios
-    .post("/projects/create", { name: projectName })
-    .then((res) => {
-      const project = res.data;
+    setError(""); // reset before sending request
 
-      setProjectName("");
-      onClose();
-
-      navigate(`/project`, { state: { project } });
-    })
-    .catch((err) => {
-      console.error("Error creating project:", err);
-    });
-};
-
+    axios
+      .post("/projects/create", { name: projectName })
+      .then((res) => {
+        const project = res.data;
+        setProjectName("");
+        onClose();
+        navigate(`/project`, { state: { project } });
+      })
+      .catch((err) => {
+        console.error("Error creating project:", err.response?.data);
+        setError(err.response?.data?.message || err.response?.data || "Something went wrong"); 
+      });
+  };
 
   if (!isOpen) return null;
 
@@ -40,6 +41,7 @@ const handleCreate = (e) => {
         <button
           onClick={() => {
             setProjectName("");
+            setError("");
             onClose();
           }}
           className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
@@ -65,9 +67,18 @@ const handleCreate = (e) => {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="Enter project name"
-              className="w-full py-3 px-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-sm sm:text-base"
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
+                error ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+              } transition-all text-sm sm:text-base`}
               required
             />
+            {error && (
+              <p className="text-red-400 text-xs mt-2">
+                {error}
+              </p>
+            )}
           </div>
 
           <div className="flex space-x-3 pt-2">
@@ -75,6 +86,7 @@ const handleCreate = (e) => {
               type="button"
               onClick={() => {
                 setProjectName("");
+                setError("");
                 onClose();
               }}
               className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-white font-medium transition-all"

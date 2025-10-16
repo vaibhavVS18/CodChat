@@ -17,47 +17,44 @@ const ConversationArea = ({
 }) => {
   const messageBoxRef = useRef(null);
   const [newMessage, setNewMessage] = useState("");
-  const {user}  = useContext(UserContext);
+  const [sending, setSending] = useState(false); 
+  const { user } = useContext(UserContext);
 
-  // Auto-scroll to bottom when messages change
-    const scrollToBottom = () => {
-        if (messageBoxRef.current) {
-            messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
-        }
-    };
+  const scrollToBottom = () => {
+    if (messageBoxRef.current) {
+      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+    }
+  };
 
-      useEffect(() => {
-        scrollToBottom();
-      }, [messages]);
-
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSend = async () => {
-    if (newMessage.trim() === "") return;
+    if (newMessage.trim() === "" || sending) return; // avoid double send
+    setSending(true);
 
     try {
-        // Save in DB
-        const res = await axios.post("/projects/add-message", {
+      const res = await axios.post("/projects/add-message", {
         projectId: project._id,
-            sender: {
-            _id: user._id,       
-            email: user.email,   
-            },
+        sender: {
+          _id: user._id,
+          email: user.email,
+        },
         content: newMessage,
-        });
+      });
 
-        // Backend returns updated project, so get last message
-        const savedMessage = res.data.project.messages.slice(-1)[0];
+      const savedMessage = res.data.project.messages.slice(-1)[0];
+      sendMessage("project-message", savedMessage);
 
-        // Emit to other users
-        sendMessage("project-message", savedMessage);
-
-        // Add locally
-        setMessages((prevMessages) => [...prevMessages, savedMessage]);
-        setNewMessage("");
+      setMessages((prevMessages) => [...prevMessages, savedMessage]);
+      setNewMessage("");
     } catch (err) {
-        console.error("Error sending message:", err);
+      console.error("Error sending message:", err);
+    } finally {
+      setSending(false);
     }
-    };
+  };
 
   return (
     <div className="flex flex-col h-[82vh] sm:h-[97vh] overflow-hidden mt-20 sm:mt-0 p-2 sm:p-4 border border-gray-400 rounded-xl sm:rounded-2xl bg-gray-800 z-10">
@@ -71,6 +68,7 @@ const ConversationArea = ({
           >
             <i className="ri-group-fill"></i>
           </button>
+
           <button
             className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-emerald-400 transition-all"
             onClick={() => setIsModalOpen(true)}
@@ -80,16 +78,15 @@ const ConversationArea = ({
               Add
             </span>
           </button>
-{project?.name && (
-  <span
-    className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 font-medium"
-    title={project.name}
-  >
-    {project.name.length > 10 ? project.name.slice(0, 10) + "…" : project.name}
-  </span>
-)}
 
-
+          {project?.name && (
+            <span
+              className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 font-medium"
+              title={project.name}
+            >
+              {project.name.length > 10 ? project.name.slice(0, 10) + "…" : project.name}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -103,7 +100,7 @@ const ConversationArea = ({
         </div>
       </header>
 
-      {/* Messages List */}
+      {/* Messages */}
       <div
         ref={messageBoxRef}
         className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-hide"
@@ -111,31 +108,37 @@ const ConversationArea = ({
         {messages.map(renderMessage)}
       </div>
 
-{/* Input Box */}
-<div className="w-full flex border border-gray-400 bg-gray/80 backdrop-blur-md flex-shrink-0 p-2 sm:p-3 rounded-b-xl">
-  <div className="w-full flex items-center gap-2">
-    <input
-      className="flex-grow px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl outline-none text-sm sm:text-base bg-gray-700 text-white border border-gray-300 focus:border-emerald-400 focus:ring-2 focus:ring-cyan-300 transition-all"
-      type="text"
-      value={newMessage}
-      onChange={(e) => setNewMessage(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") handleSend();
-      }}
-      placeholder="Msg (use @ai for AI assistance)"
-    />
-        <button
+      {/* Input Box */}
+      <div className="w-full flex border border-gray-400 bg-gray/80 backdrop-blur-md flex-shrink-0 p-2 sm:p-3 rounded-b-xl">
+        <div className="w-full flex items-center gap-2">
+          <input
+            className={`flex-grow px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl outline-none text-sm sm:text-base 
+              bg-gray-700 text-white border border-gray-300 focus:border-emerald-400 focus:ring-2 focus:ring-cyan-300 transition-all
+              ${sending ? "opacity-60 cursor-not-allowed" : ""}`}
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSend();
+            }}
+            placeholder="Msg (use @ai for AI assistance)"
+            disabled={sending}
+          />
+
+          <button
             onClick={handleSend}
-            className="ml-2 w-12 h-12 flex items-center justify-center 
-                        bg-gray border border-gray-200 text-white 
-                        rounded-xl transition-all hover:bg-gray-700 shadow-md"
-            >
-            <i className="ri-send-plane-fill text-lg mt-1"></i>
-        </button>
-  </div>
-</div>
-
-
+            disabled={sending}
+            className={`ml-2 w-12 h-12 flex items-center justify-center rounded-xl border border-gray-200 text-white transition-all shadow-md 
+              ${sending ? "bg-gray-600 cursor-not-allowed" : "bg-gray hover:bg-gray-700"}`}
+          >
+            {sending ? (
+              <i className="ri-loader-4-line animate-spin text-lg"></i>
+            ) : (
+              <i className="ri-send-plane-fill text-lg mt-1"></i>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

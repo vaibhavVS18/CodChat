@@ -61,9 +61,7 @@ export const profileController = async(req, res)=>{
     const user = await userModel.findOne({email});   // .select bcoz in schema we have used passsword select false
 
 
-    res.status(200).json({
-        user: user
-    });
+    res.status(200).json({user: user});
 }
 
 export const logoutController = async (req, res)=>{

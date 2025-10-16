@@ -21,7 +21,7 @@ router.post("/login",
 
 router.get("/profile",authMiddleware.authUser,  userController.profileController);
 
-router.get("/logout", authMiddleware.authUser, userController.logoutController);
+router.get("/logout", authMiddleware.authUser, userController.logoutController);   //change it to POST req. later
 
 
 router.get("/all", authMiddleware.authUser, userController.getAllUsersController);

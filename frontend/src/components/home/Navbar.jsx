@@ -5,10 +5,11 @@ import { UserContext } from "../../context/user.context"; // adjust path
 
 export default function Navbar({ onLoginClick }) {
   const { user, setUser } = useContext(UserContext); // use context directly
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);         // useRef here acts as a pointer to the dropdown’s DOM node. It allows your code to check if a click happened outside that element, and if so, close the dropdown menu.
 
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
@@ -24,7 +25,7 @@ export default function Navbar({ onLoginClick }) {
     try {
       await axios.get("/users/logout");
       localStorage.removeItem("token");
-      setUser(null); // ✅ context updates, Navbar re-renders instantly
+      setUser(null); //  context updates, Navbar re-renders instantly
       navigate("/");
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -62,21 +63,22 @@ export default function Navbar({ onLoginClick }) {
 
             {/* Right side */}
             <div className="flex items-center space-x-4 relative" ref={menuRef}>
-                        <button
-                      className="text-gray-100 hover:text-emerald-400 transition-colors"
-                      onClick={(e) => {
-                        navigate("/", { replace: true }); // go to home
-                        const topPosition = window.innerWidth >= 768 ? 650 : 550; // PC : Mobile
-                        setTimeout(() => {
-                          window.scrollTo({
-                            top: topPosition,
-                            behavior: "smooth",
-                          });
-                        }, 50); // scroll after page renders
-                      }}
-                    >
-                      Features
-                    </button>
+                <button
+                  className="text-gray-100 hover:text-emerald-400 transition-colors"
+                  onClick={(e) => {
+                    navigate("/", { replace: true }); // go to home
+                    const topPosition = window.innerWidth >= 768 ? 650 : 550; // PC : Mobile
+                    setTimeout(() => {
+                      window.scrollTo({
+                        top: topPosition,
+                        behavior: "smooth",
+                      });
+                    }, 50); // scroll after page renders
+                  }}
+                >
+                  Features
+                </button>
+
               {user ? (
                 <>
                   {/* Profile Circle Button */}

@@ -7,7 +7,8 @@ import { FcGoogle } from "react-icons/fc";
 const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading]  =useState(false);
+  const [loading, setLoading]  = useState(false);
+  const [error, setError] = useState(""); // 🧠 New state for showing backend errors
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
   function submitHandler(e) {
     e.preventDefault();
     setLoading(true);
+    setError(""); // reset previous error
 
     axios
       .post("/users/login", { email, password })
@@ -25,35 +27,36 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
         onClose(); // close modal after login
       })
       .catch((err) => {
-        console.log(err.response?.data || err.message);
+        console.error(err.response?.data?.errors || err.message);
+        setError(
+          err.response?.data?.message ||
+          err.response?.data?.errors ||
+          "Invalid credentials. Please try again."
+        );
       })
-      .finally(()=>{
+      .finally(() => {
         setLoading(false);
       });
   }
 
-    // Google OAuth
+  // Google OAuth
   const handleGoogleLogin = () => {
-    // redirect user to backend Google login route
-      const backendUrl = import.meta.env.VITE_API_URL;
-      const redirectPage = window.location.pathname;  // currentpage
-     window.location.href = `${backendUrl}/auth/google?state=${encodeURIComponent(redirectPage)}`;
+    const backendUrl = import.meta.env.VITE_API_URL;
+    const redirectPage = window.location.pathname;
+    window.location.href = `${backendUrl}/auth/google?state=${encodeURIComponent(redirectPage)}`;
   };
 
   if (!isOpen) return null;
 
   return (
     <div
-    //   className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 overflow-y-auto"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 overflow-y-auto"
       onClick={onClose}
     >
-      {/* Modal box */}
       <div
         className="bg-gray-900/80 backdrop-blur-md p-4 sm:p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-800 relative my-8"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
@@ -79,9 +82,14 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
               id="email"
               placeholder="Enter your email"
               required
-              className="w-full py-3 px-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-sm sm:text-base"
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
+                error ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+              } transition-all text-sm sm:text-base`}
             />
           </div>
+
           <div>
             <label
               className="block text-gray-400 mb-2 text-sm font-medium"
@@ -95,9 +103,17 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
               id="password"
               placeholder="Enter your password"
               required
-              className="w-full py-3 px-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-sm sm:text-base"
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
+                error ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+              } transition-all text-sm sm:text-base`}
             />
+            {error && (
+              <p className="text-red-400 text-xs mt-2">{error}</p>
+            )}
           </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -109,35 +125,31 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
-        {/* Divider */}
-          <div className="flex items-center my-3">
-            <hr className="flex-1 border-gray-700" />
-            <span className="px-3 text-gray-400">or</span>
-            <hr className="flex-1 border-gray-700" />
-          </div> 
-
-        {/* Google Sign Up Button */}
-        <div className="flex justify-center">
-        <button
-          onClick={handleGoogleLogin}
-          className=" py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
-        >
-          <FcGoogle className="text-xl" />
-          Sign in with Google
-        </button>
+        <div className="flex items-center my-3">
+          <hr className="flex-1 border-gray-700" />
+          <span className="px-3 text-gray-400">or</span>
+          <hr className="flex-1 border-gray-700" />
         </div>
-        
+
+        <div className="flex justify-center">
+          <button
+            onClick={handleGoogleLogin}
+            className="py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
+          >
+            <FcGoogle className="text-xl" />
+            Sign in with Google
+          </button>
+        </div>
 
         <p className="text-gray-400 mt-4 text-center text-xs sm:text-sm">
           Don&apos;t have an account?{" "}
           <button
             type="button"
             onClick={() => {
-              onClose();      // close Login modal
-              onSignupClick(); // open Register modal
+              onClose();
+              onSignupClick();
             }}
             className="text-emerald-400 hover:text-cyan-400 font-medium transition-colors"
           >

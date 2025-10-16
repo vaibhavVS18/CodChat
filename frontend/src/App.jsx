@@ -10,8 +10,7 @@ const App = () => {
           <AppRoutes/>
       </ModalProvider>
     </UserProvider>
-
   )
 }
 
-export default App
+export default App;

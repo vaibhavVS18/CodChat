@@ -1,7 +1,7 @@
 import React from "react";
 import {Route, BrowserRouter, Routes} from "react-router-dom";
-import Login from "../screens/Login.jsx";
-import Register from "../screens/Register.jsx";
+// import Login from "../screens/Login.jsx";
+// import Register from "../screens/Register.jsx";
 import Home from "../screens/Home.jsx";
 import Project from "../screens/Project.jsx";
 import UserAuth from "../auth/UserAuth.jsx";

@@ -2,12 +2,13 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user.context";
 import axios from "../../config/axios";
-import {FcGoogle} from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 
 const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); 
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
   function submitHandler(e) {
     e.preventDefault();
     setLoading(true);
+    setError(""); // reset previous error
 
     axios
       .post("/users/register", { email, password })
@@ -26,17 +28,23 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
         onClose();
       })
       .catch((err) => {
-        console.log(err.response?.data || err.message);
+        console.error(err.response?.data || err.message);
+        setError(
+          err.response?.data ||
+            err.response?.data?.errors ||
+            "Something went wrong. Please try again."
+        );
       })
       .finally(() => setLoading(false));
   }
 
   // Google OAuth
   const handleGoogleLogin = () => {
-    // redirect user to backend Google login route
-      const backendUrl = import.meta.env.VITE_API_URL;
-      const redirectPage = window.location.pathname;  // currentpage
-     window.location.href = `${backendUrl}/auth/google?state=${encodeURIComponent(redirectPage)}`;
+    const backendUrl = import.meta.env.VITE_API_URL;
+    const redirectPage = window.location.pathname;
+    window.location.href = `${backendUrl}/auth/google?state=${encodeURIComponent(
+      redirectPage
+    )}`;
   };
 
   if (!isOpen) return null;
@@ -51,7 +59,10 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          onClick={onClose}
+          onClick={() => {
+            setError("");
+            onClose();
+          }}
           className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
         >
           ✕
@@ -63,63 +74,86 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
 
         <form onSubmit={submitHandler} className="space-y-5">
           <div>
-            <label className="block text-gray-400 mb-2 text-sm font-medium" htmlFor="email">
+            <label
+              className="block text-gray-400 mb-2 text-sm font-medium"
+              htmlFor="email"
+            >
               Email
             </label>
             <input
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
               type="email"
               id="email"
-              className="w-full py-3 px-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-sm sm:text-base"
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
+                error ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+              } transition-all text-sm sm:text-base`}
               placeholder="Enter your email"
               required
             />
           </div>
           <div>
-            <label className="block text-gray-400 mb-2 text-sm font-medium" htmlFor="password">
+            <label
+              className="block text-gray-400 mb-2 text-sm font-medium"
+              htmlFor="password"
+            >
               Password
             </label>
             <input
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
               type="password"
               id="password"
-              className="w-full py-3 px-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-sm sm:text-base"
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
+                error ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+              } transition-all text-sm sm:text-base`}
               placeholder="Enter your password"
               required
             />
+            {error && (
+              <p className="text-red-400 text-xs mt-2">{error}</p>
+            )}
           </div>
+
           <button
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-xl font-medium shadow-md transition-all text-sm sm:text-base 
-              ${loading 
-                ? "bg-gray-700 text-gray-300 cursor-not-allowed" 
-                : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white"
+              ${
+                loading
+                  ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white"
               }`}
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-          {/* Divider */}
-          <div className="flex items-center my-3">
-            <hr className="flex-1 border-gray-700" />
-            <span className="px-3 text-gray-400">or</span>
-            <hr className="flex-1 border-gray-700" />
-          </div> 
+        {/* Divider */}
+        <div className="flex items-center my-3">
+          <hr className="flex-1 border-gray-700" />
+          <span className="px-3 text-gray-400">or</span>
+          <hr className="flex-1 border-gray-700" />
+        </div>
 
         {/* Google Sign Up Button */}
         <div className="flex justify-center">
-        <button
-          onClick={handleGoogleLogin}
-          className=" py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
-        >
-          <FcGoogle className="text-xl" />
-          Sign up with Google
-        </button>
+          <button
+            onClick={handleGoogleLogin}
+            className="py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
+          >
+            <FcGoogle className="text-xl" />
+            Sign up with Google
+          </button>
         </div>
-
-
 
         <p className="text-gray-400 mt-4 text-center text-xs sm:text-sm">
           Already have an account?{" "}

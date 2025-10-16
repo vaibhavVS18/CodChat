@@ -12,20 +12,20 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // attach token automatically via your axios interceptor
       axios
         .get("/users/profile") // backend should return user info
         .then((res) => {
           setUser(res.data.user);
         })
         .catch((err) => {
-          console.log("Failed to restore user:", err.response?.data);
+          // console.log("Failed to restore user:", err.response?.data);
           localStorage.removeItem("token"); // invalid token
         })
         .finally(() => {
           setLoading(false);
         });
-    } else {
+    } 
+    else {
       setLoading(false);
     }
   }, []);
