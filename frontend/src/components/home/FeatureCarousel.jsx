@@ -1,5 +1,6 @@
-import React from "react";
+import React ,{useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const features = [
   {
@@ -25,15 +26,23 @@ const features = [
 export default function FeatureCarousel() {
   const [index, setIndex] = React.useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % features.length);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
 
+  const handleNext = () => {
+    setIndex((prev) => (prev + 1) % features.length);
+  };
+
+  const handlePrev = () => {
+    setIndex((prev) => (prev - 1 + features.length) % features.length);
+  };
+
   return (
-    <div className="w-full aspect-video relative rounded-xl overflow-hidden bg-gray-900 border border-gray-400 shadow-lg">
+    <div className="relative w-full aspect-video relative rounded-xl overflow-hidden bg-gray-900 border border-gray-400 shadow-lg">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -58,9 +67,39 @@ export default function FeatureCarousel() {
             <p className="text-xs sm:text-sm md:text-lg mb-3 max-w-full sm:max-w-md leading-relaxed opacity-90">
               {features[index].description}
             </p>
+
           </div>
         </motion.div>
       </AnimatePresence>
+
+        {/* Left / Right Arrows */}
+      <button
+        onClick={handlePrev}
+        className="absolute left-3 top-1/2 -translate-y-1/2 bg-gray-800/70 hover:bg-gray-700 text-white p-2 rounded-full shadow-md transition-all"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+
+      <button
+        onClick={handleNext}
+        className="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-800/70 hover:bg-gray-700 text-white p-2 rounded-full shadow-md transition-all"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+
+        {/* Dots Indicator */}
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
+        {features.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === index ? "bg-emerald-400 scale-125" : "bg-gray-400/70 hover:bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+
     </div>
   );
 }

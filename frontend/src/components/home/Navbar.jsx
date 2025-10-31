@@ -63,6 +63,22 @@ export default function Navbar({ onLoginClick }) {
 
             {/* Right side */}
             <div className="flex items-center space-x-4 relative" ref={menuRef}>
+                {user && (
+                  <button
+                    className="hidden md:inline text-gray-100 hover:text-emerald-400 transition-colors"
+                    onClick={(e) => {
+                      navigate("/", { replace: true }); // go to home
+                      setTimeout(() => {
+                        window.scrollTo({
+                          top: document.body.scrollHeight,
+                          behavior: "smooth",
+                        });
+                      }, 50); // scroll after page renders
+                    }}
+                  >
+                    My Projects
+                  </button>
+                )}
                 <button
                   className="text-gray-100 hover:text-emerald-400 transition-colors"
                   onClick={(e) => {

@@ -32,8 +32,9 @@ const Home = () => {
       // Navigate to original page
       navigate(redirectPage, { replace: true });
     }
-  }, [setUser, navigate]);
+  }, []);     // [setUser, navigate]
 
+  
 
   const fetchProjects = () => {
     axios
@@ -106,11 +107,10 @@ const Home = () => {
           {/* 1. Team Collaboration */}
           <div
             tabIndex={0}
-            className="rounded-2xl overflow-hidden cursor-pointer 
+            className="rounded-2xl overflow-hidden
                       transition-transform 
                       hover:shadow-xl focus:shadow-xl active:shadow-xl
-                      bg-gray-900 border border-gray-700 
-                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+                      bg-gray-900 border border-emerald-500"
           >
             <img
               src="/feature1.png"
@@ -128,11 +128,10 @@ const Home = () => {
           {/* 2. Integrated Chat */}
           <div
             tabIndex={0}
-            className="rounded-2xl overflow-hidden cursor-pointer 
+            className="rounded-2xl overflow-hidden
                       transition-transform 
                       hover:shadow-xl focus:shadow-xl active:shadow-xl
-                      bg-gray-900 border border-gray-700 
-                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+                      bg-gray-900 border border-emerald-500"
           >
             <img
               src="/feature2.png"
@@ -150,11 +149,10 @@ const Home = () => {
           {/* 3. AI Assistant */}
           <div
             tabIndex={0}
-            className="rounded-2xl overflow-hidden cursor-pointer 
+            className="rounded-2xl overflow-hidden
                       transition-transform 
                       hover:shadow-xl focus:shadow-xl active:shadow-xl
-                      bg-gray-900 border border-gray-700 
-                      hover:border-emerald-500 focus:border-emerald-500 active:border-emerald-500"
+                      bg-gray-900 border border-emerald-500"
           >
             <img
               src="/feature3.png"

@@ -257,11 +257,16 @@ const renderMessage = (message, index) => {
           <div className="absolute top-8 right-12">
             <div className="px-6 py-4 rounded-xl">
               <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
-                AI Response like <span className="text-white"> Code </span> 
-                and <span className="text-white">Files </span> 
-                will be shown here.
+                To Get <span className="text-gray-300"> AI Response </span>
+                write
+                <span className="text-gray-300"> @ai </span> 
+                at start of your message.
               </p>
-            </div>
+              <p className="text-2xl text-center font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+                [ AI Response like <span className="text-gray-400"> Code </span> 
+                and <span className="text-gray-400">Files </span> 
+                will be shown here ]
+              </p>            </div>
           </div>
         </div>
       )

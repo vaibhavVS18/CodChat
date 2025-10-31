@@ -34,6 +34,7 @@ router.get("/google", (req, res, next) => {
 //     }
 // );
 
+
 //    //  -> imp.- authenticate by jwt token
 // router.get(
 //   "/google/callback",
