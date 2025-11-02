@@ -17,9 +17,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   
-  useEffect(()=>{
+    useEffect(() => {
       fetch("https://codchat-jvsc.onrender.com");
-  }, []);
+      fetch("https://trueseller-q39b.onrender.com");
+    }, []);
 
   useEffect(()=>{
     const params = new URLSearchParams(window.location.search);   // it gives query string part of the url
