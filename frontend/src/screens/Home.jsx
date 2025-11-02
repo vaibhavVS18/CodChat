@@ -16,6 +16,11 @@ const Home = () => {
 
   const navigate = useNavigate();
 
+  
+  useEffect(()=>{
+      fetch("https://codchat-jvsc.onrender.com");
+  }, []);
+
   useEffect(()=>{
     const params = new URLSearchParams(window.location.search);   // it gives query string part of the url
     const token = params.get("token");
