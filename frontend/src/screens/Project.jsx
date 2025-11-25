@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "../config/axios";
-import { initializeSocket, receiveMessage, sendMessage } from "../config/socket";
+import { initializeSocket, receiveMessage } from "../config/socket";
 import { UserContext } from "../context/user.context";
 import AIResponsePanel from "../components/AIResponsePanel";
 import AddCollaboratorsModal from "../components/project/AddCollaboratorModal";

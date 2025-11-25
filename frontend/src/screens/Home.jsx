@@ -11,12 +11,11 @@ const Home = () => {
   const [projects, setProjects] = useState([]);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
-  const { user , setUser} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { setIsLoginOpen } = useContext(ModalContext);
 
   const navigate = useNavigate();
 
-  
     useEffect(() => {
       fetch("https://codchat-jvsc.onrender.com");
       fetch("https://trueseller-q39b.onrender.com");

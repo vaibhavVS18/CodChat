@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
         .then((res) => {
           setUser(res.data.user);
         })
-        .catch((err) => {
+        .catch(() => {
           // console.log("Failed to restore user:", err.response?.data);
           localStorage.removeItem("token"); // invalid token
         })
