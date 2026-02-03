@@ -1,6 +1,7 @@
 <div align="center">
   <a href="https://cod-chat-nine.vercel.app">
   <img src="./frontend/public/logo.png" alt="CodChat Logo" width="200"/>
+  <img src="./frontend/public/logo1.png" alt="CodChat Logo" width="200"/>
   <h1>CodChat – Real-time Project Collaboration Platform</h1>
   </a>
 </div>
