@@ -16,15 +16,15 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-    useEffect(() => {
-      fetch("https://codchat-jvsc.onrender.com");
-      fetch("https://trueseller-q39b.onrender.com");
-    }, []);
+  useEffect(() => {
+    fetch("https://codchat-jvsc.onrender.com");
+    fetch("https://trueseller-q39b.onrender.com");
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);   // it gives query string part of the url
     const token = params.get("token");
-    const redirectPage= params.get("redirectPage");
+    const redirectPage = params.get("redirectPage");
     console.log(redirectPage);
 
     if (token) {
@@ -39,7 +39,7 @@ const Home = () => {
     }
   }, []);     // [setUser, navigate]
 
-  
+
 
   const fetchProjects = () => {
     axios
@@ -77,7 +77,7 @@ const Home = () => {
             }
           }}
           className="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 rounded-xl text-lg font-medium 
-                     shadow-md hover:shadow-emerald-500/30 transition-all inline-flex items-center space-x-2"
+                     shadow-md hover:shadow-emerald-500/30 transition-all inline-flex items-center space-x-2 cursor-pointer animate-float"
         >
           <span>Start New Project</span>
           <svg
@@ -97,7 +97,7 @@ const Home = () => {
 
 
         <div className="w-80 sm:w-64 md:w-150 mx-auto mt-12">
-          <FeatureCarousel/>
+          <FeatureCarousel />
         </div>
       </div>
 

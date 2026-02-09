@@ -4,10 +4,10 @@ import axios from "../../config/axios";
 import { UserContext } from "../../context/user.context";
 import { FcGoogle } from "react-icons/fc";
 
-const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
+const LoginModal = ({ isOpen, onClose, onSignupClick, onForgotPasswordClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading]  = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); // 🧠 New state for showing backend errors
 
   const { setUser } = useContext(UserContext);
@@ -59,7 +59,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
+          className="absolute top-3 right-3 text-gray-400 hover:text-white transition cursor-pointer"
         >
           ✕
         </button>
@@ -82,11 +82,9 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
               id="email"
               placeholder="Enter your email"
               required
-              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
-                error ? "border-red-500" : "border-gray-700"
-              } focus:outline-none focus:ring-2 ${
-                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
-              } transition-all text-sm sm:text-base`}
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${error ? "border-red-500" : "border-gray-700"
+                } focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+                } transition-all text-sm sm:text-base`}
             />
           </div>
 
@@ -103,24 +101,31 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
               id="password"
               placeholder="Enter your password"
               required
-              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
-                error ? "border-red-500" : "border-gray-700"
-              } focus:outline-none focus:ring-2 ${
-                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
-              } transition-all text-sm sm:text-base`}
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${error ? "border-red-500" : "border-gray-700"
+                } focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+                } transition-all text-sm sm:text-base`}
             />
             {error && (
               <p className="text-red-400 text-xs mt-2">{error}</p>
             )}
+            <div className="text-right mt-1">
+              <button
+                type="button"
+                onClick={onForgotPasswordClick}
+                className="text-emerald-400 hover:text-cyan-400 text-xs font-medium transition-colors cursor-pointer"
+              >
+                Forgot Password?
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-xl font-medium shadow-md transition-all text-sm sm:text-base 
-              ${loading 
-                ? "bg-gray-700 text-gray-300 cursor-not-allowed" 
-                : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white"
+              ${loading
+                ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white cursor-pointer"
               }`}
           >
             {loading ? "Logging in..." : "Login"}
@@ -136,7 +141,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
         <div className="flex justify-center">
           <button
             onClick={handleGoogleLogin}
-            className="py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base"
+            className="py-2 px-4 flex items-center justify-center gap-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-medium shadow-md transition-all text-sm sm:text-base cursor-pointer"
           >
             <FcGoogle className="text-xl" />
             Sign in with Google
@@ -151,7 +156,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
               onClose();
               onSignupClick();
             }}
-            className="text-emerald-400 hover:text-cyan-400 font-medium transition-colors"
+            className="text-emerald-400 hover:text-cyan-400 font-medium transition-colors cursor-pointer"
           >
             Create one
           </button>

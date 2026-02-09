@@ -7,7 +7,7 @@ const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId, onCollab
 
   const [selectedUserIds, setSelectedUserIds] = useState([]);
 
-  
+
   const addCollaborators = () => {
     axios
       .put("/projects/add-user", {
@@ -15,7 +15,7 @@ const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId, onCollab
         users: selectedUserIds,
       })
       .then((res) => {
-        if(res.data?.updatedProject){
+        if (res.data?.updatedProject) {
           onCollaboratorsUpdated(res.data.updatedProject.users)
           onClose(); // close modal after adding
         }
@@ -43,7 +43,7 @@ const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId, onCollab
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
+          className="absolute top-3 right-3 text-gray-400 hover:text-white transition cursor-pointer"
         >
           ✕
         </button>
@@ -78,13 +78,13 @@ const AddCollaboratorsModal = ({ isOpen, onClose, usersList, projectId, onCollab
         <div className="flex justify-end gap-3 flex-shrink-0">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm transition-all"
+            className="px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm transition-all cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={addCollaborators}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white text-sm shadow-md hover:shadow-cyan-500/30 transition-all"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white text-sm shadow-md hover:shadow-cyan-500/30 transition-all cursor-pointer"
           >
             Add
           </button>

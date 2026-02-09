@@ -53,9 +53,9 @@ const Project = () => {
 
       if (data.sender?.email === "AI" || data.sender?._id === "ai") {
         try {
-        //  ->  Save AI responses to DB at generation time , (not here)
+          //  ->  Save AI responses to DB at generation time , (not here)
 
-        
+
           // Auto-open AI panel if response has files
           const parsedMessage =
             typeof data.content === "string"
@@ -66,8 +66,7 @@ const Project = () => {
             parsedMessage &&
             parsedMessage.fileTree &&
             typeof parsedMessage.fileTree === "object" &&
-            Object.keys(parsedMessage.fileTree).length > 0) 
-            {
+            Object.keys(parsedMessage.fileTree).length > 0) {
             setIsAiPanelOpen(true);
             setSelectedAiMessage(data);
           }
@@ -95,7 +94,7 @@ const Project = () => {
         params: { projectId: project._id }, // send projectId
       })
       .then((res) => {
-        setUsersList(res.data.users); 
+        setUsersList(res.data.users);
       })
       .catch((err) => {
         console.log(err);
@@ -103,102 +102,99 @@ const Project = () => {
 
   }, [location.state.project._id, project._id]);
 
-const renderMessage = (message, index) => {
-  const isAI = message.sender.email === "AI" || message.sender._id === "ai";
-  const isOwnMessage = message.sender?._id.toString() === user._id;
+  const renderMessage = (message, index) => {
+    const isAI = message.sender.email === "AI" || message.sender._id === "ai";
+    const isOwnMessage = message.sender?._id.toString() === user._id;
 
-  if (isAI) {
-    let displayText = message.content;
-    let hasFiles = false;
+    if (isAI) {
+      let displayText = message.content;
+      let hasFiles = false;
 
-    try {
-      let parsed;
-      if (typeof message.content === "string") {
-        parsed = JSON.parse(message.content);
-      } else if (
-        typeof message.content === "object" &&
-        message.content !== null
-      ) {
-        parsed = message.content;
-      } else {
-        parsed = { text: message.content };
+      try {
+        let parsed;
+        if (typeof message.content === "string") {
+          parsed = JSON.parse(message.content);
+        } else if (
+          typeof message.content === "object" &&
+          message.content !== null
+        ) {
+          parsed = message.content;
+        } else {
+          parsed = { text: message.content };
+        }
+
+        displayText = parsed.text || message.content;
+        hasFiles =
+          parsed.fileTree &&
+          typeof parsed.fileTree === "object" &&
+          Object.keys(parsed.fileTree).length > 0;
+      } catch (err) {
+        console.log("Error parsing AI message:", err);
+        displayText =
+          typeof message.content === "string"
+            ? message.content
+            : JSON.stringify(message.content);
       }
 
-      displayText = parsed.text || message.content;
-      hasFiles =
-        parsed.fileTree &&
-        typeof parsed.fileTree === "object" &&
-        Object.keys(parsed.fileTree).length > 0;
-    } catch (err) {
-      console.log("Error parsing AI message:", err);
-      displayText =
-        typeof message.content === "string"
-          ? message.content
-          : JSON.stringify(message.content);
+      return (
+        <div key={index} className="message flex flex-col relative z-10">
+          <small className="opacity-90 text-xs sm:text-sm flex items-center gap-1 mb-1 flex-shrink-0 text-emerald-300">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            {message.sender.email}
+          </small>
+          <div className="bg-gray-900/90 backdrop-blur-md border border-emerald-400/70 p-4 rounded-r-xl max-w-full text-emerald-100 shadow-xl shadow-emerald-500/20">
+            <p className="text-base sm:text-sm leading-relaxed break-words">
+              {displayText}
+            </p>
+            {hasFiles && (
+              <button
+                onClick={() => {
+                  setIsAiPanelOpen(true);
+                  setSelectedAiMessage(message);
+                }}
+                className="mt-3 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm transition-colors shadow-md cursor-pointer font-medium"
+              >
+                View Files & Code
+              </button>
+            )}
+          </div>
+        </div>
+      );
     }
 
     return (
-      <div key={index} className="message flex flex-col relative z-10">
-        <small className="opacity-90 text-xs sm:text-sm flex items-center gap-1 mb-1 flex-shrink-0 text-emerald-300">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+      <div
+        key={index}
+        className={`message flex flex-col relative z-10 ${isOwnMessage ? "items-end" : "items-start"
+          }`}
+      >
+        <small
+          className={`opacity-90 text-xs sm:text-sm mb-1 flex-shrink-0 ${isOwnMessage ? "text-blue-300" : "text-gray-100"
+            }`}
+        >
           {message.sender.email}
         </small>
-        <div className="bg-gray-900/90 backdrop-blur-md border border-emerald-400/70 p-4 rounded-r-xl max-w-full text-emerald-100 shadow-xl shadow-emerald-500/20">
+        <div
+          className={`max-w-[85%] p-4 rounded-lg border relative z-10 shadow-xl ${isOwnMessage
+            ? "bg-blue-900/70 text-white border-blue-400/60 rounded-br-none shadow-blue-500/20"
+            : "bg-gray-800/80 text-gray-100 border-white/40 rounded-bl-none"
+            }`}
+        >
           <p className="text-base sm:text-sm leading-relaxed break-words">
-            {displayText}
+            {message.content}
           </p>
-          {hasFiles && (
-            <button
-              onClick={() => {
-                setIsAiPanelOpen(true);
-                setSelectedAiMessage(message);
-              }}
-              className="mt-3 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs sm:text-sm hover:from-emerald-400 hover:to-cyan-400 transition-all shadow-md"
-            >
-              View Files & Code
-            </button>
-          )}
         </div>
       </div>
     );
-  }
-
-  return (
-    <div
-      key={index}
-      className={`message flex flex-col relative z-10 ${
-        isOwnMessage ? "items-end" : "items-start"
-      }`}
-    >
-      <small
-        className={`opacity-90 text-xs sm:text-sm mb-1 flex-shrink-0 ${
-          isOwnMessage ? "text-blue-300" : "text-gray-100"
-        }`}
-      >
-        {message.sender.email}
-      </small>
-      <div
-        className={`max-w-[85%] p-4 rounded-lg border relative z-10 shadow-xl ${
-          isOwnMessage
-            ? "bg-blue-900/70 text-white border-blue-400/60 rounded-br-none shadow-blue-500/20"
-            : "bg-gray-800/80 text-gray-100 border-white/40 rounded-bl-none"
-        }`}
-      >
-        <p className="text-base sm:text-sm leading-relaxed break-words">
-          {message.content}
-        </p>
-      </div>
-    </div>
-  );
-};
+  };
 
 
   return (
     <main className="flex-1 flex relative overflow-hidden">
       {/* Chat Section - Fixed width on desktop, full width on mobile when AI panel closed */}
       <section className={`p-2 left relative h-full flex flex-col flex-shrink-0 ${
-          // Mobile: full width when AI panel closed, hidden when open
-          isAiPanelOpen ? 'hidden lg:flex lg:w-1/4' : 'w-full lg:w-1/4'
+        // Mobile: full width when AI panel closed, hidden when open
+        isAiPanelOpen ? 'hidden lg:flex lg:w-1/4' : 'w-full lg:w-1/4'
         }`}>
 
 
@@ -231,8 +227,8 @@ const renderMessage = (message, index) => {
           projectId={project._id}
 
           // imp.- to update users in ColllaboratorPanel also , 
-          onCollaboratorsUpdated={(newUsers)=>{
-            setProject((prev)=>({
+          onCollaboratorsUpdated={(newUsers) => {
+            setProject((prev) => ({
               ...prev,
               users: newUsers
             }))
@@ -242,35 +238,35 @@ const renderMessage = (message, index) => {
       </section>
 
 
-          {/* replacer of ai Response Panel */}
-    {
-      !isAiPanelOpen && (
-        <div className="inset-y-0 mt-20 right flex-1 bg-gray-900 shadow-lg z-40 flex flex-col border-2 border-gray-400 rounded-2xl overflow-hidden relative">
-          {/* Image fills div completely */}
-          <img
-            src="/back.png"
-            alt="AI Preview"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/10"></div>     
-          {/* Text overlay at top-right */}
-          <div className="absolute top-8 right-12">
-            <div className="px-6 py-4 rounded-xl">
-              <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
-                To Get <span className="text-gray-300"> AI Response </span>
-                write
-                <span className="text-gray-300"> @ai </span> 
-                at start of your message.
-              </p>
-              <p className="text-2xl text-center font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
-                [ AI Response like <span className="text-gray-400"> Code </span> 
-                and <span className="text-gray-400">Files </span> 
-                will be shown here ]
-              </p>            </div>
+      {/* replacer of ai Response Panel */}
+      {
+        !isAiPanelOpen && (
+          <div className="inset-y-0 mt-20 right flex-1 bg-gray-900 shadow-lg z-40 flex flex-col border-2 border-gray-400 rounded-2xl overflow-hidden relative">
+            {/* Image fills div completely */}
+            <img
+              src="/back.png"
+              alt="AI Preview"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/10"></div>
+            {/* Text overlay at top-right */}
+            <div className="absolute top-8 right-12">
+              <div className="px-6 py-4 rounded-xl">
+                <p className="text-4xl font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+                  To Get <span className="text-gray-300"> AI Response </span>
+                  write
+                  <span className="text-gray-300"> @ai </span>
+                  at start of your message.
+                </p>
+                <p className="text-2xl text-center font-bold leading-snug bg-gradient-to-r from-cyan-300 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+                  [ AI Response like <span className="text-gray-400"> Code </span>
+                  and <span className="text-gray-400">Files </span>
+                  will be shown here ]
+                </p>            </div>
+            </div>
           </div>
-        </div>
-      )
-    }
+        )
+      }
 
       {/* AI Response Panel - Takes remaining space on desktop, full width on mobile */}
       <AIResponsePanel

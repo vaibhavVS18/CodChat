@@ -17,10 +17,10 @@ const ConversationArea = ({
 }) => {
   const messageBoxRef = useRef(null);
   const [newMessage, setNewMessage] = useState("");
-  const [sending, setSending] = useState(false); 
+  const [sending, setSending] = useState(false);
   const { user } = useContext(UserContext);
 
-  const [aiMode, setAiMode] =useState(false);
+  const [aiMode, setAiMode] = useState(false);
 
 
   const scrollToBottom = () => {
@@ -59,8 +59,8 @@ const ConversationArea = ({
     }
   };
 
-  const checkAI= ()=>{
-    if(newMessage.startsWith("@ai")){
+  const checkAI = () => {
+    if (newMessage.startsWith("@ai")) {
       return true;
     }
     else return false;
@@ -73,7 +73,7 @@ const ConversationArea = ({
       <header className="flex justify-between items-center p-2 px-4 w-full backdrop-blur-md border border-gray-400 rounded-xl shadow-sm flex-shrink-0 mb-2">
         <div className="flex items-center gap-3">
           <button
-            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-emerald-400 transition-all"
+            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-emerald-400 transition-all cursor-pointer"
             onClick={() => setIsSidePanelOpen((prev) => !prev)}
             title="Show Collaborators"
           >
@@ -81,7 +81,7 @@ const ConversationArea = ({
           </button>
 
           <button
-            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-emerald-400 transition-all"
+            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-emerald-400 transition-all cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
             <i className="ri-add-fill text-gray-200 hover:text-emerald-300"></i>
@@ -102,7 +102,7 @@ const ConversationArea = ({
 
         <div className="flex items-center gap-2">
           <button
-            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-cyan-400 transition-all"
+            className="p-2 bg-gray-700/50 hover:bg-gray-600/60 rounded-md text-gray-200 hover:text-cyan-400 transition-all cursor-pointer"
             onClick={() => setIsAiPanelOpen(!isAiPanelOpen)}
             title="Toggle AI Response Panel"
           >
@@ -128,11 +128,11 @@ const ConversationArea = ({
                 onClick={() => {
                   setNewMessage("@ai make a calculator frontend project");
                 }}
-                className="px-2 py-1 rounded-xl text-sm font-medium bg-blue-900/70 hover:bg-blue-700 text-gray-100 border border-gray-500 transition-all shadow-sm"
+                className="px-2 py-1 rounded-xl text-sm font-medium bg-blue-900/70 hover:bg-blue-700 text-gray-100 border border-gray-500 transition-all shadow-sm cursor-pointer"
                 title="Try an AI example"
               >
                 <span>Try: </span>
-                 @ai make a calculator frontend project
+                @ai make a calculator frontend project
               </button>
             </div>
           </div>
@@ -143,15 +143,15 @@ const ConversationArea = ({
               <button
                 onClick={() => {
                   setAiMode((prev) => !prev);
-                  if(! checkAI()){
+                  if (!checkAI()) {
                     setNewMessage(`@ai ${newMessage}`);
-                  } 
-                  else{
+                  }
+                  else {
                     const temp = newMessage.slice(4);
                     setNewMessage(temp);
                   }
                 }}
-                className={`px-2 py-1.5 rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm border 
+                className={`px-2 py-1.5 rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm border cursor-pointer
                   ${checkAI()
                     ? "bg-emerald-600 text-white border-emerald-400 hover:bg-emerald-500"
                     : "bg-gray-700/70 text-gray-200 border-emerald-400 hover:bg-gray-600"}`}
@@ -181,7 +181,7 @@ const ConversationArea = ({
               onClick={handleSend}
               disabled={sending}
               className={`flex items-center justify-center px-2  rounded-xl border border-gray-200 text-white transition-all shadow-md 
-                ${sending ? "bg-gray-600 cursor-not-allowed" : "bg-gray hover:bg-gray-700"}`}
+                ${sending ? "bg-gray-600 cursor-not-allowed" : "bg-gray hover:bg-gray-700 cursor-pointer"}`}
             >
               {sending ? (
                 <i className="ri-loader-4-line animate-spin text-lg"></i>

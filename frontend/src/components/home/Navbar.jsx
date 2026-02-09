@@ -65,7 +65,7 @@ export default function Navbar({ onLoginClick }) {
             <div className="flex items-center space-x-4 relative" ref={menuRef}>
                 {user && (
                   <button
-                    className="hidden md:inline text-gray-100 hover:text-emerald-400 transition-colors"
+                    className="hidden md:inline text-gray-100 hover:text-emerald-400 transition-colors cursor-pointer"
                     onClick={(e) => {
                       navigate("/", { replace: true }); // go to home
                       setTimeout(() => {
@@ -80,7 +80,7 @@ export default function Navbar({ onLoginClick }) {
                   </button>
                 )}
                 <button
-                  className="text-gray-100 hover:text-emerald-400 transition-colors"
+                  className="text-gray-100 hover:text-emerald-400 transition-colors cursor-pointer"
                   onClick={(e) => {
                     navigate("/", { replace: true }); // go to home
                     const topPosition = window.innerWidth >= 768 ? 650 : 550; // PC : Mobile
@@ -100,7 +100,7 @@ export default function Navbar({ onLoginClick }) {
                   {/* Profile Circle Button */}
                   <button
                     onClick={() => setIsMenuOpen((prev) => !prev)}
-                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-500 hover:border-cyan-400 transition-all"
+                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-500 hover:border-cyan-400 transition-all cursor-pointer"
                   >
                     <img
                       src="/profile.png"
@@ -123,7 +123,7 @@ export default function Navbar({ onLoginClick }) {
                           });
                         }, 50); // small delay to allow page to render
                       }}
-                      className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-emerald-400 transition-all"
+                      className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-emerald-400 transition-all cursor-pointer"
                     >
                       My Projects
                     </button>
@@ -133,7 +133,7 @@ export default function Navbar({ onLoginClick }) {
                           setIsMenuOpen(false);
                           handleLogout();
                         }}
-                        className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-red-400 transition-all"
+                        className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-red-400 transition-all cursor-pointer"
                       >
                         Logout
                       </button>
@@ -143,7 +143,7 @@ export default function Navbar({ onLoginClick }) {
               ) : (
                 <button
                   onClick={onLoginClick}
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all"
+                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all cursor-pointer"
                 >
                   Login
                 </button>

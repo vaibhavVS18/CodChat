@@ -1,14 +1,15 @@
-import React, {createContext, useState} from "react";
+import React, { createContext, useState } from "react";
 
 export const ModalContext = createContext();
 
-export const ModalProvider = ({children})=>{
+export const ModalProvider = ({ children }) => {
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
     return (
-        <ModalContext.Provider value={{isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen}}>
-                {children}
+        <ModalContext.Provider value={{ isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen, isForgotPasswordOpen, setIsForgotPasswordOpen }}>
+            {children}
         </ModalContext.Provider>
     )
 }

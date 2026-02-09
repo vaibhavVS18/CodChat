@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const CreateProjectModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [projectName, setProjectName] = useState("");
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
       })
       .catch((err) => {
         console.error("Error creating project:", err.response?.data);
-        setError(err.response?.data?.message || err.response?.data || "Something went wrong"); 
+        setError(err.response?.data?.message || err.response?.data || "Something went wrong");
       });
   };
 
@@ -44,7 +44,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
             setError("");
             onClose();
           }}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white transition"
+          className="absolute top-3 right-3 text-gray-400 hover:text-white transition cursor-pointer"
         >
           ✕
         </button>
@@ -67,11 +67,9 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="Enter project name"
-              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${
-                error ? "border-red-500" : "border-gray-700"
-              } focus:outline-none focus:ring-2 ${
-                error ? "focus:ring-red-500" : "focus:ring-emerald-500"
-              } transition-all text-sm sm:text-base`}
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border ${error ? "border-red-500" : "border-gray-700"
+                } focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"
+                } transition-all text-sm sm:text-base`}
               required
             />
             {error && (
@@ -89,13 +87,13 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
                 setError("");
                 onClose();
               }}
-              className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-white font-medium transition-all"
+              className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-white font-medium transition-all cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 rounded-xl text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all"
+              className="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 rounded-xl text-white font-medium shadow-md hover:shadow-emerald-500/30 transition-all cursor-pointer"
             >
               Create
             </button>
