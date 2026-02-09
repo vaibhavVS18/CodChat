@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { sendOTP, verifyOTP, resetPassword } from "../controllers/forgotPassword.controller.js";
 
 const router = Router();
 
@@ -22,7 +23,7 @@ router.get("/google", (req, res, next) => {
     session: false,
     state: req.query.state     // redirectPage passing in state
   })
-  (req, res, next);  // <- second time , imp.(bcoz of state) ,  First part → create the middleware with your custom state value.  Second part → invoke it with the current request/response.
+    (req, res, next);  // <- second time , imp.(bcoz of state) ,  First part → create the middleware with your custom state value.  Second part → invoke it with the current request/response.
 });
 
 
@@ -81,5 +82,10 @@ router.get(
 //         res.redirect("/");
 //     })
 // });
+
+// Forgot Password Routes
+router.post("/forgot-password/send-otp", sendOTP);
+router.post("/forgot-password/verify-otp", verifyOTP);
+router.post("/forgot-password/reset-password", resetPassword);
 
 export default router;
