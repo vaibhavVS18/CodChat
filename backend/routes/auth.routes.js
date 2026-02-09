@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { sendOTP, verifyOTP, resetPassword } from "../controllers/forgotPassword.controller.js";
+import { resetPassword } from "../controllers/forgotPassword.controller.js";
 
 const router = Router();
 
@@ -84,8 +84,6 @@ router.get(
 // });
 
 // Forgot Password Routes
-router.post("/forgot-password/send-otp", sendOTP);
-router.post("/forgot-password/verify-otp", verifyOTP);
 router.post("/forgot-password/reset-password", resetPassword);
 
 export default router;

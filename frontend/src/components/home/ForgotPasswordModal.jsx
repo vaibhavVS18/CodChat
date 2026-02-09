@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import axios from "../../config/axios";
 
 const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
-    const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Password
     const [email, setEmail] = useState("");
-    const [otp, setOtp] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -12,9 +10,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
     const [success, setSuccess] = useState("");
 
     const resetForm = () => {
-        setStep(1);
         setEmail("");
-        setOtp("");
         setNewPassword("");
         setConfirmPassword("");
         setError("");
@@ -27,51 +23,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
         onClose();
     };
 
-    // Step 1: Send OTP
-    const handleSendOTP = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        try {
-            const res = await axios.post("/auth/forgot-password/send-otp", { email });
-            setSuccess(res.data.message);
-            setTimeout(() => {
-                setStep(2);
-                setSuccess("");
-            }, 1500);
-        } catch (err) {
-            console.error(err.response?.data || err.message);
-            setError(err.response?.data?.message || "Failed to send OTP. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Step 2: Verify OTP
-    const handleVerifyOTP = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        try {
-            const res = await axios.post("/auth/forgot-password/verify-otp", { email, otp });
-            setSuccess(res.data.message);
-            setTimeout(() => {
-                setStep(3);
-                setSuccess("");
-            }, 1500);
-        } catch (err) {
-            console.error(err.response?.data || err.message);
-            setError(err.response?.data?.message || "Failed to verify OTP. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Step 3: Reset Password
+    // Reset Password
     const handleResetPassword = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -93,9 +45,10 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
         }
 
         try {
+            // We'll update the backend to just accept email and new password
+            // For now, we're calling the reset endpoint directly
             const res = await axios.post("/auth/forgot-password/reset-password", {
                 email,
-                otp,
                 newPassword,
             });
             setSuccess(res.data.message);
@@ -106,24 +59,6 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
         } catch (err) {
             console.error(err.response?.data || err.message);
             setError(err.response?.data?.message || "Failed to reset password. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Resend OTP
-    const handleResendOTP = async () => {
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        try {
-            const res = await axios.post("/auth/forgot-password/send-otp", { email });
-            setSuccess("New OTP sent to your email");
-            setOtp("");
-        } catch (err) {
-            console.error(err.response?.data || err.message);
-            setError(err.response?.data?.message || "Failed to resend OTP. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -159,23 +94,6 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
                     Reset Password
                 </h2>
 
-                {/* Progress Indicator */}
-                <div className="flex justify-center mb-6">
-                    <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${step >= 1 ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                            1
-                        </div>
-                        <div className={`w-12 h-1 ${step >= 2 ? 'bg-emerald-500' : 'bg-gray-700'}`}></div>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${step >= 2 ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                            2
-                        </div>
-                        <div className={`w-12 h-1 ${step >= 3 ? 'bg-emerald-500' : 'bg-gray-700'}`}></div>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${step >= 3 ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                            3
-                        </div>
-                    </div>
-                </div>
-
                 {/* Success Message */}
                 {success && (
                     <div className="mb-4 p-3 bg-emerald-900/30 border border-emerald-500/30 rounded-lg">
@@ -190,164 +108,79 @@ const ForgotPasswordModal = ({ isOpen, onClose, onLoginClick }) => {
                     </div>
                 )}
 
-                {/* Step 1: Email Entry */}
-                {step === 1 && (
-                    <form onSubmit={handleSendOTP} className="space-y-5">
-                        <p className="text-gray-400 text-sm text-center mb-4">
-                            Enter your email address and we'll send you an OTP to reset your password.
-                        </p>
-                        <div>
-                            <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="email">
-                                Email Address
-                            </label>
-                            <input
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                    setError("");
-                                }}
-                                value={email}
-                                type="email"
-                                id="email"
-                                placeholder="Enter your email"
-                                required
-                                className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
-                            />
-                        </div>
+                {/* Password Reset Form */}
+                <form onSubmit={handleResetPassword} className="space-y-5">
+                    <p className="text-gray-400 text-sm text-center mb-4">
+                        Enter your email and new password to reset it.
+                    </p>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base cursor-pointer ${loading
-                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                                : "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-white"
-                                }`}
-                        >
-                            {loading ? "Sending OTP..." : "Send OTP"}
-                        </button>
-                    </form>
-                )}
+                    <div>
+                        <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="email">
+                            Email
+                        </label>
+                        <input
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setError("");
+                            }}
+                            value={email}
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            required
+                            className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
+                        />
+                    </div>
 
-                {/* Step 2: OTP Verification */}
-                {step === 2 && (
-                    <form onSubmit={handleVerifyOTP} className="space-y-5">
-                        <p className="text-gray-400 text-sm text-center mb-4">
-                            We've sent a 6-digit OTP to <strong className="text-emerald-400">{email}</strong>. Please enter it below.
-                        </p>
-                        <div>
-                            <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="otp">
-                                OTP Code
-                            </label>
-                            <input
-                                onChange={(e) => {
-                                    setOtp(e.target.value);
-                                    setError("");
-                                }}
-                                value={otp}
-                                type="text"
-                                id="otp"
-                                placeholder="Enter 6-digit OTP"
-                                required
-                                maxLength={6}
-                                pattern="\d{6}"
-                                className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-center tracking-widest font-semibold text-white placeholder-gray-500"
-                            />
-                        </div>
+                    <div>
+                        <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="newPassword">
+                            New Password
+                        </label>
+                        <input
+                            onChange={(e) => {
+                                setNewPassword(e.target.value);
+                                setError("");
+                            }}
+                            value={newPassword}
+                            type="password"
+                            id="newPassword"
+                            placeholder="Enter new password"
+                            required
+                            minLength={8}
+                            className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
+                        />
+                    </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base cursor-pointer ${loading
-                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                                : "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-white"
-                                }`}
-                        >
-                            {loading ? "Verifying..." : "Verify OTP"}
-                        </button>
+                    <div>
+                        <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="confirmPassword">
+                            Confirm Password
+                        </label>
+                        <input
+                            onChange={(e) => {
+                                setConfirmPassword(e.target.value);
+                                setError("");
+                            }}
+                            value={confirmPassword}
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm new password"
+                            required
+                            minLength={8}
+                            className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
+                        />
+                    </div>
 
-                        <div className="flex justify-between items-center text-sm">
-                            <button
-                                type="button"
-                                onClick={() => setStep(1)}
-                                className="text-gray-400 hover:text-gray-200 transition-colors cursor-pointer"
-                            >
-                                ← Back
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleResendOTP}
-                                disabled={loading}
-                                className="text-emerald-400 hover:text-teal-300 font-medium transition-colors disabled:opacity-50 cursor-pointer"
-                            >
-                                Resend OTP
-                            </button>
-                        </div>
-                    </form>
-                )}
-
-                {/* Step 3: Password Reset */}
-                {step === 3 && (
-                    <form onSubmit={handleResetPassword} className="space-y-5">
-                        <p className="text-gray-400 text-sm text-center mb-4">
-                            Enter your new password below.
-                        </p>
-                        <div>
-                            <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="newPassword">
-                                New Password
-                            </label>
-                            <input
-                                onChange={(e) => {
-                                    setNewPassword(e.target.value);
-                                    setError("");
-                                }}
-                                value={newPassword}
-                                type="password"
-                                id="newPassword"
-                                placeholder="Enter new password"
-                                required
-                                minLength={8}
-                                className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-gray-300 mb-2 text-sm font-medium" htmlFor="confirmPassword">
-                                Confirm Password
-                            </label>
-                            <input
-                                onChange={(e) => {
-                                    setConfirmPassword(e.target.value);
-                                    setError("");
-                                }}
-                                value={confirmPassword}
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Confirm new password"
-                                required
-                                minLength={8}
-                                className="w-full py-3 px-4 rounded-lg bg-slate-800/50 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all text-sm sm:text-base text-white placeholder-gray-500"
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base cursor-pointer ${loading
-                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                                : "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-white"
-                                }`}
-                        >
-                            {loading ? "Resetting Password..." : "Reset Password"}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => setStep(2)}
-                            className="w-full text-gray-400 hover:text-gray-200 transition-colors text-sm cursor-pointer"
-                        >
-                            ← Back
-                        </button>
-                    </form>
-                )}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base cursor-pointer ${loading
+                            ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-white"
+                            }`}
+                    >
+                        {loading ? "Resetting Password..." : "Reset Password"}
+                    </button>
+                </form>
 
                 {/* Login Link */}
                 <p className="text-gray-400 mt-5 text-center text-sm">

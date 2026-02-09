@@ -5,21 +5,9 @@ import * as authMiddleware from "../middleware/auth.middleware.js"
 
 const router = Router();
 
-router.post("/send-otp",
-    body("email").isEmail().withMessage("Email must be a valid email address"),
-    userController.sendOTPController
-);
-
-router.post("/verify-otp",
-    body("email").isEmail().withMessage("Email must be a valid email address"),
-    body("otp").isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits"),
-    userController.verifyOTPController
-);
-
 router.post("/register",
     body("email").isEmail().withMessage("Email must be a vaild email address"),
     body("password").isLength({ min: 3 }).withMessage("password must be at least 3 characters long"),
-    body("otp").isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits"),
     userController.createUserController
 );
 

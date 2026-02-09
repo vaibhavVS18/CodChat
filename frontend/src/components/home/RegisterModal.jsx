@@ -5,89 +5,26 @@ import axios from "../../config/axios";
 import { FcGoogle } from "react-icons/fc";
 
 const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
-  const [step, setStep] = useState(1); // 1: Enter Email, 2: Enter OTP & Password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [countdown, setCountdown] = useState(0);
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Countdown timer for resend OTP
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [countdown]);
-
   // Reset form when modal closes
   useEffect(() => {
     if (!isOpen) {
-      setStep(1);
       setEmail("");
       setPassword("");
-      setOtp("");
       setError("");
       setSuccessMessage("");
-      setCountdown(0);
     }
   }, [isOpen]);
 
-  // Step 1: Send OTP
-  function sendOTPHandler(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMessage("");
-
-    axios
-      .post("/users/send-otp", { email })
-      .then((res) => {
-        setSuccessMessage(res.data.message || "OTP sent successfully!");
-        setStep(2);
-        setCountdown(60); // 60 seconds countdown
-      })
-      .catch((err) => {
-        console.error(err.response?.data || err.message);
-        setError(
-          err.response?.data?.message ||
-          err.response?.data?.errors?.[0]?.msg ||
-          "Failed to send OTP. Please try again."
-        );
-      })
-      .finally(() => setLoading(false));
-  }
-
-  // Resend OTP
-  function resendOTPHandler() {
-    if (countdown > 0) return;
-
-    setLoading(true);
-    setError("");
-    setSuccessMessage("");
-
-    axios
-      .post("/users/send-otp", { email })
-      .then((res) => {
-        setSuccessMessage("OTP resent successfully!");
-        setCountdown(60);
-      })
-      .catch((err) => {
-        console.error(err.response?.data || err.message);
-        setError(
-          err.response?.data?.message ||
-          "Failed to resend OTP. Please try again."
-        );
-      })
-      .finally(() => setLoading(false));
-  }
-
-  // Step 2: Complete Registration with OTP
+  // Complete Registration (Directly without OTP)
   function submitHandler(e) {
     e.preventDefault();
     setLoading(true);
@@ -95,7 +32,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
     setSuccessMessage("");
 
     axios
-      .post("/users/register", { email, password, otp })
+      .post("/users/register", { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         setUser(res.data.user);
@@ -160,153 +97,69 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
           </div>
         )}
 
-        {/* Step 1: Enter Email */}
-        {step === 1 && (
-          <form onSubmit={sendOTPHandler} className="space-y-5">
-            <div>
-              <label
-                className="block text-gray-400 mb-2 text-sm font-medium"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-                value={email}
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-                required
-                className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border text-sm sm:text-base
-                            ${error ? "border-red-500" : "border-gray-700"} focus:outline-none focus:ring-2
-                            ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"} transition-all 
-                        `}
-              />
-              {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base 
-              ${loading
-                  ? "bg-gray-700 text-gray-300 cursor-not-allowed"
-                  : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white cursor-pointer"
-                }`}
+        {/* Registration Form */}
+        <form onSubmit={submitHandler} className="space-y-5">
+          <div>
+            <label
+              className="block text-gray-400 mb-2 text-sm font-medium"
+              htmlFor="email"
             >
-              {loading ? "Sending OTP..." : "Send OTP"}
-            </button>
-          </form>
-        )}
+              Email
+            </label>
+            <input
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+              value={email}
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              required
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border text-sm sm:text-base
+                          ${error ? "border-red-500" : "border-gray-700"} focus:outline-none focus:ring-2
+                          ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"} transition-all 
+                      `}
+            />
+          </div>
 
-        {/* Step 2: Enter OTP & Password */}
-        {step === 2 && (
-          <form onSubmit={submitHandler} className="space-y-5">
-            {/* Email Display */}
-            <div>
-              <label className="block text-gray-400 mb-2 text-sm font-medium">
-                Email
-              </label>
-              <div className="flex items-center gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  disabled
-                  className="flex-1 py-3 px-4 rounded-lg bg-gray-700 border border-gray-600 text-gray-300 text-sm sm:text-base"
-                />
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="text-emerald-400 hover:text-cyan-400 text-sm font-medium whitespace-nowrap cursor-pointer"
-                >
-                  Change
-                </button>
-              </div>
-            </div>
-
-            {/* OTP Input */}
-            <div>
-              <label
-                className="block text-gray-400 mb-2 text-sm font-medium"
-                htmlFor="otp"
-              >
-                OTP Code
-              </label>
-              <input
-                onChange={(e) => {
-                  setOtp(e.target.value);
-                  setError("");
-                }}
-                value={otp}
-                type="text"
-                id="otp"
-                placeholder="Enter 6-digit OTP"
-                required
-                maxLength={6}
-                pattern="[0-9]{6}"
-                className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border text-sm sm:text-base tracking-widest text-center font-semibold
-                            ${error ? "border-red-500" : "border-gray-700"} focus:outline-none focus:ring-2
-                            ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"} transition-all 
-                        `}
-              />
-              <div className="flex justify-between items-center mt-2">
-                <p className="text-xs text-gray-500">Check your email for OTP</p>
-                <button
-                  type="button"
-                  onClick={resendOTPHandler}
-                  disabled={countdown > 0 || loading}
-                  className={`text-xs font-medium cursor-pointer ${countdown > 0 || loading
-                    ? "text-gray-500 cursor-not-allowed"
-                    : "text-emerald-400 hover:text-cyan-400"
-                    }`}
-                >
-                  {countdown > 0 ? `Resend in ${countdown}s` : "Resend OTP"}
-                </button>
-              </div>
-            </div>
-
-            {/* Password Input */}
-            <div>
-              <label
-                className="block text-gray-400 mb-2 text-sm font-medium"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setError("");
-                }}
-                value={password}
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                required
-                className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border text-sm sm:text-base
-                            ${error ? "border-red-500" : "border-gray-700"} focus:outline-none focus:ring-2
-                            ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"} transition-all 
-                        `}
-              />
-              {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base 
-              ${loading
-                  ? "bg-gray-700 text-gray-300 cursor-not-allowed"
-                  : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white cursor-pointer"
-                }`}
+          <div>
+            <label
+              className="block text-gray-400 mb-2 text-sm font-medium"
+              htmlFor="password"
             >
-              {loading ? "Registering..." : "Complete Registration"}
-            </button>
-          </form>
-        )}
+              Password
+            </label>
+            <input
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              value={password}
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+              className={`w-full py-3 px-4 rounded-lg bg-gray-800 text-white border text-sm sm:text-base
+                          ${error ? "border-red-500" : "border-gray-700"} focus:outline-none focus:ring-2
+                          ${error ? "focus:ring-red-500" : "focus:ring-emerald-500"} transition-all 
+                      `}
+            />
+            {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all text-sm sm:text-base 
+            ${loading
+                ? "bg-gray-700 text-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white cursor-pointer"
+              }`}
+          >
+            {loading ? "Registering..." : "Create Account"}
+          </button>
+        </form>
 
         {/* Divider */}
         <div className="flex items-center my-4">
