@@ -1,16 +1,18 @@
 import nodemailer from 'nodemailer';
 
 export async function sendForgotPasswordOTP(email, otp) {
-  // Create transporter
+  // Create transporter - Using port 465 for Render compatibility
   const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST, // e.g., smtp.gmail.com
-    port: process.env.EMAIL_PORT || 587,
-    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT) || 465,
+    secure: true, // Use SSL for port 465
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
     family: 4, // Force IPv4 to avoid IPv6 connection issues
+    connectionTimeout: 10000, // 10 second timeout
+    greetingTimeout: 10000,
   });
 
   // Email content for Password Reset
