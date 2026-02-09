@@ -1,24 +1,25 @@
 import nodemailer from 'nodemailer';
 
 export async function sendOTPEmail(email, otp) {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST, // e.g., smtp.gmail.com
-        port: process.env.EMAIL_PORT || 587,
-        secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST, // e.g., smtp.gmail.com
+    port: process.env.EMAIL_PORT || 587,
+    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    family: 4, // Force IPv4 to avoid IPv6 connection issues
+  });
 
-    // Email content
-    const mailOptions = {
-        from: `"CodChat" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'CodChat Verification – OTP Code',
+  // Email content
+  const mailOptions = {
+    from: `"CodChat" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'CodChat Verification – OTP Code',
 
-        html: `
+    html: `
   <div style="
     font-family: Arial, sans-serif; 
     max-width: 600px; 
@@ -85,9 +86,9 @@ export async function sendOTPEmail(email, otp) {
     </p>
   </div>
   `,
-    };
+  };
 
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+  // Send email
+  await transporter.sendMail(mailOptions);
 }
