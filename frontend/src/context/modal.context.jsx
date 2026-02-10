@@ -5,10 +5,9 @@ export const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
     const [isRegisterOpen, setIsRegisterOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
     return (
-        <ModalContext.Provider value={{ isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen, isForgotPasswordOpen, setIsForgotPasswordOpen }}>
+        <ModalContext.Provider value={{ isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen }}>
             {children}
         </ModalContext.Provider>
     )

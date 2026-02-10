@@ -4,7 +4,7 @@ import axios from "../../config/axios";
 import { UserContext } from "../../context/user.context";
 import { FcGoogle } from "react-icons/fc";
 
-const LoginModal = ({ isOpen, onClose, onSignupClick, onForgotPasswordClick }) => {
+const LoginModal = ({ isOpen, onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -108,15 +108,6 @@ const LoginModal = ({ isOpen, onClose, onSignupClick, onForgotPasswordClick }) =
             {error && (
               <p className="text-red-400 text-xs mt-2">{error}</p>
             )}
-            <div className="text-right mt-1">
-              <button
-                type="button"
-                onClick={onForgotPasswordClick}
-                className="text-emerald-400 hover:text-cyan-400 text-xs font-medium transition-colors cursor-pointer"
-              >
-                Forgot Password?
-              </button>
-            </div>
           </div>
 
           <button

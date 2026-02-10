@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/home/Navbar";
 import RegisterModal from "../components/home/RegisterModal";
 import LoginModal from "../components/home/LoginModal";
-import ForgotPasswordModal from "../components/home/ForgotPasswordModal";
+
 import Footer from "../components/home/Footer";
 
 import { UserContext } from "../context/user.context";
@@ -12,7 +12,7 @@ import { ModalContext } from "../context/modal.context";
 
 const Layout = () => {
   const { user } = useContext(UserContext);
-  const { isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen, isForgotPasswordOpen, setIsForgotPasswordOpen } = useContext(ModalContext);
+  const { isRegisterOpen, setIsRegisterOpen, isLoginOpen, setIsLoginOpen } = useContext(ModalContext);
 
   return (
 
@@ -43,20 +43,9 @@ const Layout = () => {
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onSignupClick={() => setIsRegisterOpen(true)}
-        onForgotPasswordClick={() => {
-          setIsLoginOpen(false);
-          setIsForgotPasswordOpen(true);
-        }}
       />
 
-      <ForgotPasswordModal
-        isOpen={isForgotPasswordOpen}
-        onClose={() => setIsForgotPasswordOpen(false)}
-        onLoginClick={() => {
-          setIsForgotPasswordOpen(false);
-          setIsLoginOpen(true);
-        }}
-      />
+
     </div>
   );
 };
