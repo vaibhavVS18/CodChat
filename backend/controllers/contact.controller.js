@@ -13,7 +13,18 @@ export const sendMessageController = async (req, res) => {
         res.status(200).json({ message: "Message sent successfully" });
     }
     catch (err) {
-        console.log("Contact form failed:", err);
+        // nodemailer puts the useful bits on these fields, not on err.message
+        console.log("Contact form failed:", {
+            code: err.code,
+            command: err.command,
+            responseCode: err.responseCode,
+            response: err.response,
+            message: err.message,
+            port: process.env.EMAIL_PORT,
+            host: process.env.EMAIL_HOST,
+            userSet: Boolean(process.env.EMAIL_USER),
+            passSet: Boolean(process.env.EMAIL_PASS),
+        });
         res.status(500).json({ message: "Could not send your message. Please try again." });
     }
 }

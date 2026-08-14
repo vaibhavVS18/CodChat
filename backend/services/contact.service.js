@@ -1,12 +1,11 @@
 import nodemailer from 'nodemailer';
 
 export async function sendContactEmail({ name, email, message }) {
-  const port = parseInt(process.env.EMAIL_PORT) || 465;
-
+  // Pinned to 465/SSL to match email.service.js — 587/STARTTLS does not work on Render
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port,
-    secure: port === 465, // 465 is implicit TLS, 587 upgrades via STARTTLS
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
