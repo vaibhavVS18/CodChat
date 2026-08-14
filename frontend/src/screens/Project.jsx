@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "../config/axios";
 import { initializeSocket, receiveMessage } from "../config/socket";
@@ -20,7 +20,31 @@ const Project = () => {
 
   const [selectedAiMessage, setSelectedAiMessage] = useState(null);
 
+  // true from the moment an @ai message is sent until the AI reply lands
+  const [aiThinking, setAiThinking] = useState(false);
+  const aiTimeoutRef = useRef(null);
+
   const { user } = useContext(UserContext);
+
+  const stopAiThinking = () => {
+    if (aiTimeoutRef.current) {
+      clearTimeout(aiTimeoutRef.current);
+      aiTimeoutRef.current = null;
+    }
+    setAiThinking(false);
+  };
+
+  // safety net: the backend emits nothing if generation throws, so never wait forever
+  const startAiThinking = () => {
+    if (aiTimeoutRef.current) clearTimeout(aiTimeoutRef.current);
+    setAiThinking(true);
+    aiTimeoutRef.current = setTimeout(() => {
+      aiTimeoutRef.current = null;
+      setAiThinking(false);
+    }, 90000);
+  };
+
+  useEffect(() => stopAiThinking, []);
 
   // ✅ Scroll to top when component mounts
   useEffect(() => {
@@ -52,6 +76,8 @@ const Project = () => {
       setMessages((prevMessages) => [...prevMessages, data]);
 
       if (data.sender?.email === "AI" || data.sender?._id === "ai") {
+        stopAiThinking();
+
         try {
           //  ->  Save AI responses to DB at generation time , (not here)
 
@@ -201,6 +227,8 @@ const Project = () => {
         {/* Conversation Area  */}
         <ConversationArea
           messages={messages}
+          aiThinking={aiThinking}
+          onAiRequest={startAiThinking}
           renderMessage={renderMessage}
           isSidePanelOpen={isSidePanelOpen}
           setIsSidePanelOpen={setIsSidePanelOpen}

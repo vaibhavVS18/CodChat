@@ -7,6 +7,7 @@ import { UserContext } from "../context/user.context";
 import { ModalContext } from "../context/modal.context.jsx";
 
 import FeatureCarousel from "../components/home/FeatureCarousel.jsx";
+import Contact from "../components/home/Contact.jsx";
 const Home = () => {
   const [projects, setProjects] = useState([]);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -55,7 +56,7 @@ const Home = () => {
   }, [user]);
 
   return (
-    <main className="max-w-7xl mx-auto px-6 pt-24 pb-12">
+    <main className="max-w-7xl mx-auto px-6 pt-24">
       {/* Hero Section */}
       <div className="text-center mb-14">
         <h2 className="text-5xl text-white/85 font-bold mb-4 tracking-tight">
@@ -184,6 +185,9 @@ const Home = () => {
         setIsLoginOpen={setIsLoginOpen}
         navigate={navigate}
       />
+
+      {/* Contact Section */}
+      <Contact />
 
       {/* Create Project Modal */}
       <CreateProjectModal

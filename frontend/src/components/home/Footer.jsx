@@ -39,9 +39,19 @@ const Footer = () => {
             Features
           </button>
 
-          <a href="#" className="hover:text-emerald-400 transition-colors">
+          <button
+            className="text-gray-300 hover:text-emerald-400 transition-colors"
+            onClick={() => {
+              navigate("/", { replace: true }); // contact section lives on home
+              setTimeout(() => {
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }, 50); // scroll after page renders
+            }}
+          >
             Contact
-          </a>
+          </button>
         </div>
 
         {/* Right Side - Social Icons */}

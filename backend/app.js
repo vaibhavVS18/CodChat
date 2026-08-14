@@ -5,6 +5,7 @@ import userRoutes from "./routes/user.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -47,6 +48,7 @@ app.use("/users", userRoutes);
 app.use("/projects", projectRoutes);
 app.use("/ai", aiRoutes);
 app.use("/auth", authRoutes);
+app.use("/contact", contactRoutes);
 
 app.get("/", (req,res)=>{
     res.send("hello");

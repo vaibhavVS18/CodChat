@@ -12,7 +12,7 @@ const ProjectsSection = ({
   const { user } = useContext(UserContext);
 
   return (
-    <div className="mb-8">
+    <div id="projects" className="mb-8 scroll-mt-28">
       <h3 className="text-2xl text-gray-300 font-semibold mb-6 text-center md:text-left">
         Your Projects
       </h3>

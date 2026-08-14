@@ -13,7 +13,9 @@ const ConversationArea = ({
   isAiPanelOpen,
   setIsAiPanelOpen,
   setMessages,
-  project
+  project,
+  aiThinking,
+  onAiRequest
 }) => {
   const messageBoxRef = useRef(null);
   const [newMessage, setNewMessage] = useState("");
@@ -22,6 +24,8 @@ const ConversationArea = ({
 
   const [aiMode, setAiMode] = useState(false);
 
+  // input stays locked until the AI reply arrives, not just until the POST resolves
+  const isBusy = sending || aiThinking;
 
   const scrollToBottom = () => {
     if (messageBoxRef.current) {
@@ -31,11 +35,14 @@ const ConversationArea = ({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, aiThinking]);
 
   const handleSend = async () => {
-    if (newMessage.trim() === "" || sending) return; // avoid double send
+    if (newMessage.trim() === "" || isBusy) return; // avoid double send
     setSending(true);
+
+    // matches the backend's own check, so we only wait when a reply is actually coming
+    const expectsAiReply = newMessage.includes("@ai");
 
     try {
       const res = await axios.post("/projects/add-message", {
@@ -52,6 +59,8 @@ const ConversationArea = ({
 
       setMessages((prevMessages) => [...prevMessages, savedMessage]);
       setNewMessage("");
+
+      if (expectsAiReply) onAiRequest?.();
     } catch (err) {
       console.error("Error sending message:", err);
     } finally {
@@ -117,6 +126,21 @@ const ConversationArea = ({
         className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-hide"
       >
         {messages.map(renderMessage)}
+
+        {aiThinking && (
+          <div className="message flex flex-col relative z-10 items-start">
+            <small className="opacity-70 text-xs text-gray-300">AI</small>
+            <div className="flex items-center gap-2 p-2 px-3 bg-gray-700 rounded-xl mt-1">
+              <i className="ri-robot-fill text-cyan-400"></i>
+              <span className="text-sm text-gray-200">AI is thinking</span>
+              <span className="flex gap-1">
+                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"></span>
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input Box */}
@@ -156,7 +180,7 @@ const ConversationArea = ({
                     ? "bg-emerald-600 text-white border-emerald-400 hover:bg-emerald-500"
                     : "bg-gray-700/70 text-gray-200 border-emerald-400 hover:bg-gray-600"}`}
                 title="Toggle AI Mode"
-                disabled={sending}
+                disabled={isBusy}
               >
                 {/* {aiMode ? "Turn Off AI" : "Turn On AI"} */}
                 AI
@@ -166,24 +190,28 @@ const ConversationArea = ({
             <input
               className={`flex-grow px-3 sm:px-4 py-3 sm:py-2 rounded-xl outline-none text-sm sm:text-base 
                 bg-gray-700 text-white border border-gray-300 focus:border-emerald-400 focus:ring-2 focus:ring-cyan-300 transition-all
-                ${sending ? "opacity-60 cursor-not-allowed" : ""}`}
+                ${isBusy ? "opacity-60 cursor-not-allowed" : ""}`}
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSend();
               }}
-              placeholder="Msg (use @ai for AI assistance)"
-              disabled={sending}
+              placeholder={
+                aiThinking
+                  ? "Waiting for AI response…"
+                  : "Msg (use @ai for AI assistance)"
+              }
+              disabled={isBusy}
             />
 
             <button
               onClick={handleSend}
-              disabled={sending}
+              disabled={isBusy}
               className={`flex items-center justify-center px-2  rounded-xl border border-gray-200 text-white transition-all shadow-md 
-                ${sending ? "bg-gray-600 cursor-not-allowed" : "bg-gray hover:bg-gray-700 cursor-pointer"}`}
+                ${isBusy ? "bg-gray-600 cursor-not-allowed" : "bg-gray hover:bg-gray-700 cursor-pointer"}`}
             >
-              {sending ? (
+              {isBusy ? (
                 <i className="ri-loader-4-line animate-spin text-lg"></i>
               ) : (
                 <i className="ri-send-plane-fill text-lg mt-1"></i>

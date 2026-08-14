@@ -78,8 +78,23 @@ io.on('connection', socket => {
         const aiIsPresentInMessage = msg.includes("@ai");
         if(aiIsPresentInMessage){
             const prompt = msg.replace("@ai", "");
-            const response = await generateResult(prompt);
-        
+
+            let response;
+            try {
+                response = await generateResult(prompt);
+            } catch (err) {
+                console.log("AI generation failed:", err);
+
+                // still emit, otherwise the client waits on a reply that never comes
+                io.to(socket.roomId).emit("project-message", {
+                    content: JSON.stringify({
+                        text: "Sorry, I couldn't generate a response. Please try again."
+                    }),
+                    sender: { _id: 'ai', email: "AI" }
+                });
+                return;
+            }
+
             const aiMessage = {
                 content: response,
                 sender: {
@@ -88,11 +103,16 @@ io.on('connection', socket => {
                 }
             }
 
-            await ProjectModel.findByIdAndUpdate(
-                socket.roomId,
-                {$push: {messages: aiMessage}},
-                {new: true}
-            )
+            // a failed save must not skip the emit below, or the client hangs
+            try {
+                await ProjectModel.findByIdAndUpdate(
+                    socket.roomId,
+                    {$push: {messages: aiMessage}},
+                    {new: true}
+                )
+            } catch (err) {
+                console.log("Failed to persist AI message:", err);
+            }
             //       // if you want to send response of AI only to who has asked qw ,then use socket.emit()
             // socket.emit("project-message", aiMessage)
 

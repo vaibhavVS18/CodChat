@@ -69,10 +69,9 @@ export default function Navbar({ onLoginClick }) {
                     onClick={(e) => {
                       navigate("/", { replace: true }); // go to home
                       setTimeout(() => {
-                        window.scrollTo({
-                          top: document.body.scrollHeight,
-                          behavior: "smooth",
-                        });
+                        document
+                          .getElementById("projects")
+                          ?.scrollIntoView({ behavior: "smooth" });
                       }, 50); // scroll after page renders
                     }}
                   >
@@ -117,10 +116,9 @@ export default function Navbar({ onLoginClick }) {
                         setIsMenuOpen(false);
                         navigate("/", { replace: true }); // go to home
                         setTimeout(() => {
-                          window.scrollTo({
-                            top: document.body.scrollHeight,
-                            behavior: "smooth",
-                          });
+                          document
+                            .getElementById("projects")
+                            ?.scrollIntoView({ behavior: "smooth" });
                         }, 50); // small delay to allow page to render
                       }}
                       className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-emerald-400 transition-all cursor-pointer"
